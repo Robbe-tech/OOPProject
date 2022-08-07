@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <fstream>
 #include <cstdlib>
+#include <vector>
 
 #include "article.h"
 #include "company.h"
@@ -39,6 +40,7 @@ int isSubstring(string s1, string s2);
 
 int main(void) {
 	const static string articleFile = "Articles.dat", customerFile = "Customers.dat", invoiceFile = "Invoices.dat", tireCenterFile = "TireCenters.dat";
+	static int articlePos = 0, customerPos = 0, invoicePos = 0, tireCenterPos = 0;
 	tire tires[TOTTIRE];
 	rim rims[TOTRIMS];
 	customer customers[CUSTOMERS];

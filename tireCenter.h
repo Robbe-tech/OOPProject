@@ -1,6 +1,6 @@
 #ifndef TIRECENTER_H
 #define TIRECENTER_H
-#define ARTIKELEN 50
+#define ARTIEKELEN 50
 #define KLANTEN 50
 
 #include <string>
@@ -12,7 +12,7 @@
 
 class tireCenter {
 public:
-	tireCenter(string&, string&, array<article, ARTIKELEN>&, array<customer, KLANTEN>&);
+	tireCenter(string&, string&, array<article, ARTIEKELEN>&, array<customer, KLANTEN>&);
 	virtual ~tireCenter() = default;
 
 	void setName(string&);
@@ -21,8 +21,8 @@ public:
 	void setAddress(string&);
 	string getAddress() const;
 
-	void setArticles(array<article, ARTIKELEN>&);
-	array<article, ARTIKELEN> getArticles() const;
+	void setArticles(array<article, ARTIEKELEN>&);
+	array<article, ARTIEKELEN> getArticles() const;
 
 	void setCustomers(array<customer, KLANTEN>&);
 	array<customer, KLANTEN> getCustomers() const;
@@ -30,12 +30,12 @@ public:
 	string toString() const;
 	string toTable() const;
 
-	void toFile(const static string&, static int);
-	void fromFile(const static string&, static int);
+	void toFile(const static string&, int*);
+	void fromFile(const static string&, int*);
 private:
 	char name[NAME];
 	char address[ADDRESS];
-	array<article, ARTIKELEN>& articles;
+	array<article, ARTIEKELEN>& articles;
 	array<customer, KLANTEN>& customers;
 };
 

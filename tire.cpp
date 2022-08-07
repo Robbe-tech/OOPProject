@@ -65,7 +65,7 @@ string tire::toTable() const {
 	return stream.str();
 }
 
-void tire::toFile(const static string& file, static int pos) {
+void tire::toFile(const static string& file, int* pos) {
 	ofstream outFile{ file, ios::out | ios::binary };
 
 	if (!outFile) {
@@ -73,12 +73,12 @@ void tire::toFile(const static string& file, static int pos) {
 		exit(EXIT_FAILURE);
 	}
 
-	outFile.seekp(pos);
+	outFile.seekp(*pos);
 	outFile.write(reinterpret_cast<char*>(this), sizeof(tire));
-	pos = outFile.tellp();
+	*pos = outFile.tellp();
 }
 
-void tire::fromFile(const static string& file, static int pos) {
+void tire::fromFile(const static string& file, int* pos) {
 	ifstream inFile{ file, ios::in | ios::binary };
 
 	if (!inFile) {
@@ -86,7 +86,7 @@ void tire::fromFile(const static string& file, static int pos) {
 		exit(EXIT_FAILURE);
 	}
 
-	inFile.seekg(pos);
+	inFile.seekg(*pos);
 	inFile.read(reinterpret_cast<char*>(this), sizeof(tire));
-	pos = inFile.tellg();
+	*pos = inFile.tellg();
 }

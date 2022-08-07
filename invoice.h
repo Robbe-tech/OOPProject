@@ -31,10 +31,10 @@ public:
 	string toString() const;
 	string toTable() const;
 
-	void toFile(const static string&, static int);
-	void fromFile(const static string&, static int);
+	void toFile(const static string&, int*);
+	void fromFile(const static string&, int*);
 private:
-	customer& custom;
+	customer& customers;
 	array<article, ARTIKELEN>& articles;
 	float price;
 	int discount;

@@ -39,7 +39,7 @@ string company::toTable() const {
 	return stream.str();
 }
 
-void company::toFile(const static string& file, static int pos) {
+void company::toFile(const static string& file, int* pos) {
 	ofstream outFile{ file, ios::out | ios::binary };
 
 	if (!outFile) {
@@ -47,12 +47,12 @@ void company::toFile(const static string& file, static int pos) {
 		exit(EXIT_FAILURE);
 	}
 
-	outFile.seekp(pos);
+	outFile.seekp(*pos);
 	outFile.write(reinterpret_cast<char*>(this), sizeof(company));
-	pos = outFile.tellp();
+	*pos = outFile.tellp();
 }
 
-void company::fromFile(const static string& file, static int pos) {
+void company::fromFile(const static string& file, int* pos) {
 	ifstream inFile{ file, ios::in | ios::binary };
 
 	if (!inFile) {
@@ -60,7 +60,7 @@ void company::fromFile(const static string& file, static int pos) {
 		exit(EXIT_FAILURE);
 	}
 
-	inFile.seekg(pos);
+	inFile.seekg(*pos);
 	inFile.read(reinterpret_cast<char*>(this), sizeof(company));
-	pos = inFile.tellg();
+	*pos = inFile.tellg();
 }
