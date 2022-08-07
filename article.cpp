@@ -1,5 +1,8 @@
+#include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <fstream>
+#include <cstdlib>
 #include "article.h"
 
 article::article(const string& naam, const string& fabrikant, int vooraad, const int dia, float prijs, const char typ) {
@@ -82,4 +85,30 @@ string article::toTable() const {
 	stream << getName() << setw(CHAR) << getManufacturer() << setw(CHAR) << getStock()
 		<< setw(10) << getDiameter() << setw(10) << setprecision(2) << fixed << showpoint << getPrice() << setw(10) << type;
 	return stream.str();
+}
+
+void article::toFile(const string& file, static int pos) {
+	ofstream outFile{file, ios::out | ios::binary};
+
+	if (!outFile) {
+		cerr << "File could not be opened." << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	outFile.seekp(pos);
+	outFile.write(reinterpret_cast<char*>(this), sizeof(article));
+	pos = outFile.tellp();
+}
+
+void article::fromFile(const string& file, static int pos) {
+	ifstream inFile{file, ios::in | ios::binary};
+	
+	if (!inFile) {
+		cerr << "File could not be opened." << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	inFile.seekg(pos);
+	inFile.read(reinterpret_cast<char*>(this), sizeof(article));
+	pos = inFile.tellg();
 }

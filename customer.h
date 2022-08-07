@@ -20,6 +20,12 @@ public:
 
 	void setType(const char);
 	char getType() const;
+
+	virtual string toString() const;
+	virtual string toTable() const;
+
+	virtual void toFile(const string& file, static int pos);
+	virtual void fromFile(const string& file, static int pos);
 private:
 	char name[NAME];
 	char address[ADDRESS];

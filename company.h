@@ -15,6 +15,12 @@ public:
 
 	void setVolumeDiscount(int);
 	int getVolumeDiscount() const;
+
+	virtual string toString() const override;
+	virtual string toTable() const override;
+
+	virtual void toFile(const string& file, static int pos) override;
+	virtual void fromFile(const string& file, static int pos) override;
 private:
 	char VAT[VATNUM];
 	int volumeDiscount;

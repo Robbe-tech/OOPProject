@@ -1,5 +1,8 @@
+#include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <fstream>
+#include <cstdlib>
 #include "tire.h"
 
 tire::tire(const string& naam, const string& fabrikant, int vooraad, const int dia, float prijs, const char typ, const int breedte, const int hoogte, const string& index, const char seizoen) :article(naam, fabrikant, vooraad, dia, prijs, typ) {
@@ -60,4 +63,30 @@ string tire::toTable() const {
 	ostringstream stream;
 	stream << article::toTable() << setw(5) << getWidth() << setw(10) << getHeight() << setw(20) << season << setw(15) << getSpeedIndex();
 	return stream.str();
+}
+
+void tire::toFile(const string& file, static int pos) {
+	ofstream outFile{ file, ios::out | ios::binary };
+
+	if (!outFile) {
+		cerr << "File could not be opened." << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	outFile.seekp(pos);
+	outFile.write(reinterpret_cast<char*>(this), sizeof(tire));
+	pos = outFile.tellp();
+}
+
+void tire::fromFile(const string& file, static int pos) {
+	ifstream inFile{ file, ios::in | ios::binary };
+
+	if (!inFile) {
+		cerr << "File could not be opened." << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	inFile.seekg(pos);
+	inFile.read(reinterpret_cast<char*>(this), sizeof(tire));
+	pos = inFile.tellg();
 }

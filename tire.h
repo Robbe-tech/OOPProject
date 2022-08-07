@@ -22,11 +22,11 @@ public:
 	void setSeason(const char);
 	char getSeason() const;
 
-	virtual string toString() const = 0;
-	virtual string toTable() const = 0;
+	virtual string toString() const override;
+	virtual string toTable() const override;
 
-	virtual void toFile() const = 0;
-	virtual void fromFile() const = 0;
+	virtual void toFile(const string& file, static int pos) override;
+	virtual void fromFile(const string& file, static int pos) override;
 private:
 	int width;
 	int height;

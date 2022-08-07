@@ -1,7 +1,8 @@
 #include <iostream>
+#include <sstream>
 #include <iomanip>
-#include <string>
-#include <array>
+#include <fstream>
+#include <cstdlib>
 
 #include "article.h"
 #include "company.h"
@@ -37,6 +38,7 @@ int isSubstring(string s1, string s2);
 
 
 int main(void) {
+	const static string articleFile = "Articles.dat", customerFile = "Customers.dat", invoiceFile = "Invoices.dat", tireCenterFile = "TireCenters.dat";
 	tire tires[TOTTIRE];
 	rim rims[TOTRIMS];
 	customer customers[CUSTOMERS];

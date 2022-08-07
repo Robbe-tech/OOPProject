@@ -32,8 +32,8 @@ public:
 	virtual string toString() const;
 	virtual string toTable() const;
 
-	virtual void toFile() const = 0;
-	virtual void fromFile() const = 0;
+	virtual void toFile(const string& file, static int pos);
+	virtual void fromFile(const string& file, static int pos);
 private:
 	char name[CHAR];
 	char manufacturer[CHAR];

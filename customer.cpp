@@ -1,3 +1,8 @@
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <fstream>
+#include <cstdlib>
 #include "customer.h"
 
 customer::customer(const string& naam,const string& adres, const char typ) {
@@ -31,4 +36,52 @@ void customer::setType(const char typ) {
 }
 char customer::getType() const {
 	return type;
+}
+
+string customer::toString() const {
+	string type;
+	if (getType() == 'u' || getType() == 'U')
+		type = "Customer";
+	else
+		type = "Company";
+	ostringstream stream;
+	stream << "Name: " << setw(20) << getName() << "\nAddress: " << setw(20) << getAddress() << "\nType: " << setw(20) << type;
+	return stream.str();
+}
+
+string customer::toTable() const {
+	string type;
+	if (getType() == 'u' || getType() == 'U')
+		type = "Customer";
+	else
+		type = "Company";
+	ostringstream stream;
+	stream << getName() << setw(NAME) << getAddress() << setw(ADDRESS) << type;
+	return stream.str();
+}
+
+void customer::toFile(const string& file, static int pos) {
+	ofstream outFile{ file, ios::out | ios::binary };
+
+	if (!outFile) {
+		cerr << "File could not be opened." << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	outFile.seekp(pos);
+	outFile.write(reinterpret_cast<char*>(this), sizeof(customer));
+	pos = outFile.tellp();
+}
+
+void customer::fromFile(const string& file, static int pos) {
+	ifstream inFile{ file, ios::in | ios::binary };
+
+	if (!inFile) {
+		cerr << "File could not be opened." << endl;
+		exit(EXIT_FAILURE);
+	}
+
+	inFile.seekg(pos);
+	inFile.read(reinterpret_cast<char*>(this), sizeof(customer));
+	pos = inFile.tellg();
 }
