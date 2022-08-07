@@ -60,7 +60,7 @@ string customer::toTable() const {
 	return stream.str();
 }
 
-void customer::toFile(const string& file, static int pos) {
+void customer::toFile(const static string& file, static int pos) {
 	ofstream outFile{ file, ios::out | ios::binary };
 
 	if (!outFile) {
@@ -73,7 +73,7 @@ void customer::toFile(const string& file, static int pos) {
 	pos = outFile.tellp();
 }
 
-void customer::fromFile(const string& file, static int pos) {
+void customer::fromFile(const static string& file, static int pos) {
 	ifstream inFile{ file, ios::in | ios::binary };
 
 	if (!inFile) {

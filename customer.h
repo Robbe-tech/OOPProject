@@ -24,8 +24,8 @@ public:
 	virtual string toString() const;
 	virtual string toTable() const;
 
-	virtual void toFile(const string& file, static int pos);
-	virtual void fromFile(const string& file, static int pos);
+	virtual void toFile(const static string&, static int);
+	virtual void fromFile(const static string&, static int);
 private:
 	char name[NAME];
 	char address[ADDRESS];

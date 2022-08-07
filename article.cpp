@@ -87,7 +87,7 @@ string article::toTable() const {
 	return stream.str();
 }
 
-void article::toFile(const string& file, static int pos) {
+void article::toFile(const static string& file, static int pos) {
 	ofstream outFile{file, ios::out | ios::binary};
 
 	if (!outFile) {
@@ -100,7 +100,7 @@ void article::toFile(const string& file, static int pos) {
 	pos = outFile.tellp();
 }
 
-void article::fromFile(const string& file, static int pos) {
+void article::fromFile(const static string& file, static int pos) {
 	ifstream inFile{file, ios::in | ios::binary};
 	
 	if (!inFile) {

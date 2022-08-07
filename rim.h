@@ -22,8 +22,8 @@ public:
 	virtual string toString() const override;
 	virtual string toTable() const override;
 
-	virtual void toFile(const string& file, static int pos) override;
-	virtual void fromFile(const string& file, static int pos) override;
+	virtual void toFile(const static string&, static int) override;
+	virtual void fromFile(const static string&, static int) override;
 private:
 	bool aluminum;
 	char color[COLOR];

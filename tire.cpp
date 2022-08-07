@@ -28,7 +28,7 @@ int tire::getHeight() const {
 
 void tire::setSpeedIndex(const std::string & index) {
 	size_t length{ index.size() };
-	length = (length < 20 ? length : 19);
+	length = (length < INDEX ? length : (INDEX - 1));
 	index.copy(speedIndex, length);
 	speedIndex[length] = '\0';
 }
@@ -65,7 +65,7 @@ string tire::toTable() const {
 	return stream.str();
 }
 
-void tire::toFile(const string& file, static int pos) {
+void tire::toFile(const static string& file, static int pos) {
 	ofstream outFile{ file, ios::out | ios::binary };
 
 	if (!outFile) {
@@ -78,7 +78,7 @@ void tire::toFile(const string& file, static int pos) {
 	pos = outFile.tellp();
 }
 
-void tire::fromFile(const string& file, static int pos) {
+void tire::fromFile(const static string& file, static int pos) {
 	ifstream inFile{ file, ios::in | ios::binary };
 
 	if (!inFile) {

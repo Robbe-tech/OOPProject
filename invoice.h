@@ -27,6 +27,12 @@ public:
 
 	float calculateDiscount();
 	float calculatePrice();
+
+	string toString() const;
+	string toTable() const;
+
+	void toFile(const static string&, static int);
+	void fromFile(const static string&, static int);
 private:
 	customer& custom;
 	array<article, ARTIKELEN>& articles;

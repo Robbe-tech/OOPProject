@@ -26,11 +26,17 @@ public:
 
 	void setCustomers(array<customer, KLANTEN>&);
 	array<customer, KLANTEN> getCustomers() const;
+
+	string toString() const;
+	string toTable() const;
+
+	void toFile(const static string&, static int);
+	void fromFile(const static string&, static int);
 private:
 	char name[NAME];
 	char address[ADDRESS];
-	array<article, ARTIKELEN> articles;
-	array<customer, KLANTEN> customers;
+	array<article, ARTIKELEN>& articles;
+	array<customer, KLANTEN>& customers;
 };
 
 #endif

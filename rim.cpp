@@ -57,7 +57,7 @@ string rim::toTable() const {
 	return stream.str();
 }
 
-void rim::toFile(const string& file, static int pos) {
+void rim::toFile(const static string& file, static int pos) {
 	ofstream outFile{file, ios::out | ios::binary};
 
 	if (!outFile) {
@@ -70,7 +70,7 @@ void rim::toFile(const string& file, static int pos) {
 	pos = outFile.tellp();
 }
 
-void rim::fromFile(const string& file, static int pos) {
+void rim::fromFile(const static string& file, static int pos) {
 	ifstream inFile{file, ios::in | ios::binary};
 
 	if (!inFile) {
