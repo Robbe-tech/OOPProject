@@ -3,42 +3,42 @@
 #include <iomanip>
 #include <fstream>
 #include <cstdlib>
-#include "customer.h"
+#include "Customer.h"
 
-customer::customer(const string& naam,const string& adres, const char typ) {
+Customer::Customer(const string& naam,const string& adres, const char typ) {
 	setName(naam);
 	setAddress(adres);
 	setType(typ);
 }
 
-void customer::setName(const string & naam) {
+void Customer::setName(const string & naam) {
 	size_t length{ naam.size() };
 	length = (length < NAME ? length : (NAME - 1));
 	naam.copy(name, length);
 	name[length] = '\0';
 }
-std::string customer::getName() const {
+std::string Customer::getName() const {
 	return name;
 }
 
-void customer::setAddress(const string & adres) {
+void Customer::setAddress(const string & adres) {
 	size_t length{ adres.size() };
 	length = (length < ADDRESS ? length : (ADDRESS - 1));
 	adres.copy(address, length);
 	address[length] = '\0';
 }
-string customer::getAddress() const {
+string Customer::getAddress() const {
 	return address;
 }
 
-void customer::setType(const char typ) {
+void Customer::setType(const char typ) {
 	type = typ;
 }
-char customer::getType() const {
+char Customer::getType() const {
 	return type;
 }
 
-string customer::toString() const {
+string Customer::toString() const {
 	string type;
 	if (getType() == 'u' || getType() == 'U')
 		type = "Customer";
@@ -49,7 +49,7 @@ string customer::toString() const {
 	return stream.str();
 }
 
-string customer::toTable() const {
+string Customer::toTable() const {
 	string type;
 	if (getType() == 'u' || getType() == 'U')
 		type = "Customer";
@@ -60,28 +60,14 @@ string customer::toTable() const {
 	return stream.str();
 }
 
-void customer::toFile(const static string& file, int* pos) {
-	ofstream outFile{ file, ios::out | ios::binary };
-
-	if (!outFile) {
-		cerr << "File could not be opened." << endl;
-		exit(EXIT_FAILURE);
-	}
-
+void Customer::toFile(ofstream outFile, int* pos) {
 	outFile.seekp(*pos);
-	outFile.write(reinterpret_cast<char*>(this), sizeof(customer));
+	outFile.write(reinterpret_cast<char*>(this), sizeof(Customer));
 	*pos = outFile.tellp();
 }
 
-void customer::fromFile(const static string& file, int* pos) {
-	ifstream inFile{ file, ios::in | ios::binary };
-
-	if (!inFile) {
-		cerr << "File could not be opened." << endl;
-		exit(EXIT_FAILURE);
-	}
-
+void Customer::fromFile(ifstream inFile, int* pos) {
 	inFile.seekg(*pos);
-	inFile.read(reinterpret_cast<char*>(this), sizeof(customer));
+	inFile.read(reinterpret_cast<char*>(this), sizeof(Customer));
 	*pos = inFile.tellg();
 }

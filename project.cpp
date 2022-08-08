@@ -3,15 +3,11 @@
 #include <iomanip>
 #include <fstream>
 #include <cstdlib>
+#include <array>
 #include <vector>
 
-#include "article.h"
-#include "company.h"
-#include "customer.h"
-#include "invoice.h"
-#include "rim.h"
-#include "tire.h"
-#include "tireCenter.h"
+#include "Invoice.h"
+#include "TireCenter.h"
 
 #define TOTTIRE 50
 #define TOTRIMS 50
@@ -23,39 +19,55 @@
 
 using namespace std;
 
-void addarticle(tire tires[TOTTIRE], rim rims[TOTRIMS]);
-void searcharticle(tire tires[TOTTIRE], rim rims[TOTRIMS]);
-void deletearticle(tire tires[TOTTIRE], rim rims[TOTRIMS]);
-void changearticle(tire tires[TOTTIRE], rim rims[TOTRIMS]);
-void checkinvoice(invoice invoices[INVOICES]);
-void makeorder(tire tires[TOTTIRE], rim rims[TOTRIMS], customer customers[CUSTOMERS], company companies[COMPANIES], invoice invoices[INVOICES]);
-void deletecustomer(customer customers[CUSTOMERS], company companies[COMPANIES]);
-void searchcustomer(customer customers[CUSTOMERS], company companies[COMPANIES]);
-void changecustomer(customer customers[CUSTOMERS], company companies[COMPANIES]);
-void addcustomer(customer customers[CUSTOMERS], company companies[COMPANIES]);
-void updatestock(tire tires[TOTTIRE], rim rims[TOTRIMS]);
-void update(tire tires[TOTTIRE], rim rims[TOTRIMS], article artikel, int change);
-int isSubstring(string s1, string s2);
+void addarticle(vector<Article*>);
+void searcharticle(vector<Article*>);
+void deletearticle(vector<Article*>);
+void changearticle(vector<Article*>);
+void checkinvoice(vector<Invoice*>);
+void makeorder(vector<Invoice*>);
+void deletecustomer(vector<Customer*>);
+void searchcustomer(vector<Customer*>);
+void changecustomer(vector<Customer*>);
+void addcustomer(vector<Customer*>);
+void updatestock(vector<Article*>);
+void update(vector<Article*>);
+bool isSubstring(string, string);
+inline bool fileTest(const static string&);
 
 
 int main(void) {
 	const static string articleFile = "Articles.dat", customerFile = "Customers.dat", invoiceFile = "Invoices.dat", tireCenterFile = "TireCenters.dat";
-	static int articlePos = 0, customerPos = 0, invoicePos = 0, tireCenterPos = 0;
-	tire tires[TOTTIRE];
-	rim rims[TOTRIMS];
-	customer customers[CUSTOMERS];
-	company companies[COMPANIES];
-	invoice invoices[INVOICES];
-	tireCenter tirecenters[TIRECENTERS];
+	int articlePos = 0, customerPos = 0, invoicePos = 0, tireCenterPos = 0;
+
+	vector<Article*> articles{};
+	vector<Customer*> customers{};
+	vector<Invoice*> invoices{};
+	vector<TireCenter*> tireCenters{};
+
+	vector<int> articlesID{};				//id van producten
+	vector<int> customersID{};
+	vector<int> invoicesID{};
+	vector<int> tireCentersID{};
+
+	vector<int> articlesPos{};				//binaire positie van producten
+	vector<int> customersPos{};
+	vector<int> invoicesPos{};
+	vector<int> tireCentersPos{};
 
 	char employee, option = 'l';
 
-	cout << "Are you the owner (o) or employee (e)?" << std::endl;
+	cout << "Are you the owner (o) or employee (e): " << std::endl;
 	cin >> employee;
-	while (!(employee == 'e' || employee == 'o'))
+	while (!(employee == 'e' || employee == 'E' || employee == 'o' || employee == 'O'))
 	{
 		cout << "Please give a valid option o or e: ";
 		cin >> employee;
+	}
+
+	if (!fileTest(articleFile)) {
+		if (employee == 'o' || employee == 'O') {
+			cout << "We see that you are new here, we will create the files in wich you can add articles, customers, invoices and tire centers." << endl << "Lets start with adding some articles.";
+		}
 	}
 
 	while (option != 'e')
@@ -776,21 +788,34 @@ void update(tire tires[TOTTIRE], rim rims[TOTRIMS], article artikel, int change)
 	;
 }
 
-int isSubstring(string s1, string s2)
+bool isSubstring(string s1, string s2)
 {
 	int M = s1.length();
 	int N = s2.length();
+	bool substring = false;
 
 	for (int i = 0; i <= N - M; i++) {
 		int j;
+		substring = true;
 
-		for (j = 0; j < M; j++)
-			if (s2[i + j] != s1[j])
-				break;
-
-		if (j == M)
-			return i;
+		for (j = 0; j < M; j++) {
+			if (s2[i + j] != s1[j]) {
+				substring = false;
+			}
+		}
+		if (substring)
+			return substring;
 	}
 
-	return -1;
+	return substring;
+}
+
+inline bool fileTest(const std::string& name) {
+	if (FILE* file = fopen(name.c_str(), "r")) {
+		fclose(file);
+		return true;
+	}
+	else {
+		return false;
+	}
 }

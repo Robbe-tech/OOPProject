@@ -5,10 +5,10 @@
 #include <string>
 #include "article.h"
 
-class tire : public article {
+class Tire : public Article {
 public:
-	tire(const string&, const string&, int, const int, float, const char, const int, const int, const string&, const char);
-	virtual ~tire() = default;
+	Tire(const string&, const string&, int, const int, float, const char, const int, const int, const string&, const char);
+	virtual ~Tire() = default;
 
 	void setWidth(const int);
 	int getWidth() const;
@@ -25,8 +25,8 @@ public:
 	virtual string toString() const override;
 	virtual string toTable() const override;
 
-	virtual void toFile(const static string&, int*) override;
-	virtual void fromFile(const static string&, int*) override;
+	virtual void toFile(ofstream, int*) override;
+	virtual void fromFile(ifstream, int*) override;
 private:
 	int width;
 	int height;

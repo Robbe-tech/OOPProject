@@ -15,51 +15,51 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="article.cpp">
+    <ClCompile Include="Article.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="company.cpp">
+    <ClCompile Include="Company.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="customer.cpp">
+    <ClCompile Include="Customer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="invoice.cpp">
+    <ClCompile Include="Invoice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="project.cpp">
+    <ClCompile Include="Project.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rim.cpp">
+    <ClCompile Include="Rim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tire.cpp">
+    <ClCompile Include="Tire.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tireCenter.cpp">
+    <ClCompile Include="TireCenter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="article.h">
+    <ClInclude Include="Article.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="company.h">
+    <ClInclude Include="Company.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="customer.h">
+    <ClInclude Include="Customer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="invoice.h">
+    <ClInclude Include="Invoice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rim.h">
+    <ClInclude Include="Rim.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tire.h">
+    <ClInclude Include="Tire.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tireCenter.h">
+    <ClInclude Include="TireCenter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

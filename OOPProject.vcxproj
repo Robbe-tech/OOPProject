@@ -139,23 +139,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="article.cpp" />
-    <ClCompile Include="company.cpp" />
-    <ClCompile Include="customer.cpp" />
-    <ClCompile Include="invoice.cpp" />
-    <ClCompile Include="project.cpp" />
-    <ClCompile Include="rim.cpp" />
-    <ClCompile Include="tire.cpp" />
-    <ClCompile Include="tireCenter.cpp" />
+    <ClCompile Include="Article.cpp" />
+    <ClCompile Include="Company.cpp" />
+    <ClCompile Include="Customer.cpp" />
+    <ClCompile Include="Invoice.cpp" />
+    <ClCompile Include="Project.cpp" />
+    <ClCompile Include="Rim.cpp" />
+    <ClCompile Include="Tire.cpp" />
+    <ClCompile Include="TireCenter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="article.h" />
-    <ClInclude Include="company.h" />
-    <ClInclude Include="customer.h" />
-    <ClInclude Include="invoice.h" />
-    <ClInclude Include="rim.h" />
-    <ClInclude Include="tire.h" />
-    <ClInclude Include="tireCenter.h" />
+    <ClInclude Include="Article.h" />
+    <ClInclude Include="Company.h" />
+    <ClInclude Include="Customer.h" />
+    <ClInclude Include="Invoice.h" />
+    <ClInclude Include="Rim.h" />
+    <ClInclude Include="Tire.h" />
+    <ClInclude Include="TireCenter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

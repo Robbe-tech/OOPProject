@@ -3,60 +3,55 @@
 #include <iomanip>
 #include <fstream>
 #include <cstdlib>
-#include "tireCenter.h"
+#include "TireCenter.h"
 
-tireCenter::tireCenter(string& naam, string& adres, array<article, ARTIEKELEN>& artiekels, array<customer, KLANTEN>& klanten) : articles(artiekels), customers(klanten) {
+TireCenter::TireCenter(string& naam, string& adres, array<Article, ARTIEKELEN>& artiekels, array<Customer, KLANTEN>& klanten) : articles(artiekels), customers(klanten) {
 	setName(naam);
 	setAddress(adres);
 	setArticles(artiekels);
 	setCustomers(klanten);
 }
 
-void tireCenter::setName(string& naam) {
+void TireCenter::setName(string& naam) {
 	size_t length{ naam.size() };
 	length = (length < NAME ? length : (NAME - 1));
 	naam.copy(name, length);
 	name[length] = '\0';
 }
-string tireCenter::getName() const {
+string TireCenter::getName() const {
 	return name;
 }
 
-void tireCenter::setAddress(string& adres) {
+void TireCenter::setAddress(string& adres) {
 	size_t length{ adres.size() };
 	length = (length < ADDRESS ? length : (ADDRESS - 1));
 	adres.copy(address, length);
 	adres[length] = '\0';
 }
-string tireCenter::getAddress() const {
+string TireCenter::getAddress() const {
 	return address;
 }
 
-void tireCenter::setArticles(array<article, ARTIEKELEN>& artiekels) {
+void TireCenter::setArticles(array<Article, ARTIEKELEN>& artiekels) {
 	int i = 0;
 	while (artiekels[i].getType() != '\0' && i < ARTIEKELEN)
 	{
-		articles[i] = article(artiekels[i]);
+		articles[i] = artiekels[i];
 		i++;
 	}
 }
-array<article, ARTIEKELEN> tireCenter::getArticles() const {
+array<Article, ARTIEKELEN> TireCenter::getArticles() const {
 	return articles;
 }
 
-void tireCenter::setCustomers(array<customer, KLANTEN>& klant) {
-	int i = 0;
-	while (klant[i].getType() != '\0' && i < KLANTEN)
-	{
-		tireCenter::customers[i] = customer(klant[i]);
-		i++;
-	}
+void TireCenter::setCustomers(array<Customer, KLANTEN>& klant) {
+	customers = klant;
 }
-array<customer, KLANTEN> tireCenter::getCustomers() const {
+array<Customer, KLANTEN> TireCenter::getCustomers() const {
 	return customers;
 }
 
-string tireCenter::toString() const {
+string TireCenter::toString() const {
 	ostringstream stream;
 	int id, i = 0;
 	stream << "Name: " << setw(20) << getName() << "\nAddress: " << setw(20) << getAddress() << "\nArticles:\n"
@@ -76,34 +71,20 @@ string tireCenter::toString() const {
 	return stream.str();
 }
 
-string tireCenter::toTable() const {
+string TireCenter::toTable() const {
 	ostringstream stream;
 	stream << getName() << setw(NAME) << getAddress() << setw(ADDRESS) << articles[0].getName() << setw(CHAR) << customers[0].getName();
 	return stream.str();
 }
 
-void tireCenter::toFile(const static string& file, int* pos) {
-	ofstream outFile{ file, ios::out | ios::binary };
-
-	if (!outFile) {
-		cerr << "File could not be opened." << endl;
-		exit(EXIT_FAILURE);
-	}
-
+void TireCenter::toFile(ofstream outFile, int* pos) {
 	outFile.seekp(*pos);
-	outFile.write(reinterpret_cast<char*>(this), sizeof(tireCenter));
+	outFile.write(reinterpret_cast<char*>(this), sizeof(TireCenter));
 	*pos = outFile.tellp();
 }
 
-void tireCenter::fromFile(const static string& file, int* pos) {
-	ifstream inFile{ file, ios::in | ios::binary };
-
-	if (!inFile) {
-		cerr << "File could not be opened." << endl;
-		exit(EXIT_FAILURE);
-	}
-
+void TireCenter::fromFile(ifstream inFile, int* pos) {
 	inFile.seekg(*pos);
-	inFile.read(reinterpret_cast<char*>(this), sizeof(tireCenter));
+	inFile.read(reinterpret_cast<char*>(this), sizeof(TireCenter));
 	*pos = inFile.tellg();
 }

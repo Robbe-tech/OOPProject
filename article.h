@@ -2,14 +2,19 @@
 #define ARTICLE_H
 #define CHAR 20
 
+#ifndef IOSTREAM
+#include <iostream>
+#include <fstream>
+#endif
+
 #include <string>
 
 using namespace std;
 
-class article {
+class Article {
 public:
-	article(const string&, const string&, int, const int, float, const char);
-	virtual ~article() = default;
+	Article(const string&, const string&, int, const int, float, const char);
+	virtual ~Article() = default;
 
 	void setName(const string&);
 	string getName() const;
@@ -32,8 +37,8 @@ public:
 	virtual string toString() const;
 	virtual string toTable() const;
 
-	virtual void toFile(const static string&, int*);
-	virtual void fromFile(const static string&, int*);
+	virtual void toFile(ofstream, int*);
+	virtual void fromFile(ifstream, int*);
 private:
 	char name[CHAR];
 	char manufacturer[CHAR];

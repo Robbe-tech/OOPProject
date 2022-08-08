@@ -3,14 +3,19 @@
 #define NAME 15
 #define ADDRESS 30
 
+#ifndef IOSTREAM
+#include <iostream>
+#include <fstream>
+#endif
+
 #include <string>
 
 using namespace std;
 
-class customer {
+class Customer {
 public:
-	customer(const string&, const  string&, const char);
-	virtual ~customer() = default;
+	Customer(const string&, const  string&, const char);
+	virtual ~Customer() = default;
 
 	void setName(const string&);
 	string getName() const;
@@ -24,8 +29,8 @@ public:
 	virtual string toString() const;
 	virtual string toTable() const;
 
-	virtual void toFile(const static string&, int*);
-	virtual void fromFile(const static string&, int*);
+	virtual void toFile(ofstream, int*);
+	virtual void fromFile(ifstream, int*);
 private:
 	char name[NAME];
 	char address[ADDRESS];

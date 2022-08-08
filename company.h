@@ -3,12 +3,12 @@
 #define VATNUM 15
 
 #include <string>
-#include "customer.h"
+#include "Customer.h"
 
-class company : public customer{
+class Company : public Customer{
 public:
-	company(const string&, string&, char, string&, int);
-	virtual ~company() = default;
+	Company(const string&, string&, char, string&, int);
+	virtual ~Company() = default;
 
 	void setVAT(string&);
 	string getVAT() const;
@@ -19,8 +19,8 @@ public:
 	virtual string toString() const override;
 	virtual string toTable() const override;
 
-	virtual void toFile(const static string&, int*) override;
-	virtual void fromFile(const static string&, int*) override;
+	virtual void toFile(ofstream, int*) override;
+	virtual void fromFile(ifstream, int*) override;
 private:
 	char VAT[VATNUM];
 	int volumeDiscount;

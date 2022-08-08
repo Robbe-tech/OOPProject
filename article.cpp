@@ -1,11 +1,9 @@
-#include <iostream>
 #include <sstream>
 #include <iomanip>
-#include <fstream>
 #include <cstdlib>
-#include "article.h"
+#include "Article.h"
 
-article::article(const string& naam, const string& fabrikant, int vooraad, const int dia, float prijs, const char typ) {
+Article::Article(const string& naam, const string& fabrikant, int vooraad, const int dia, float prijs, const char typ) {
 	setName(naam);
 	setManufacturer(fabrikant);
 	setStock(vooraad);
@@ -14,55 +12,55 @@ article::article(const string& naam, const string& fabrikant, int vooraad, const
 	setType(typ);
 }
 
-void article::setName(const string& naam) {
+void Article::setName(const string& naam) {
 	size_t length{naam.size()};
 	length = (length < CHAR ? length : (CHAR - 1));
 	naam.copy(name, length);
 	name[length] = '\0';
 }
-string article::getName() const {
+string Article::getName() const {
 	return name;
 }
 
-void article::setManufacturer(const string& fabrikant) {
+void Article::setManufacturer(const string& fabrikant) {
 	size_t length{ fabrikant.size() };
 	length = (length < CHAR ? length : (CHAR - 1));
 	fabrikant.copy(manufacturer, length);
 	manufacturer[length] = '\0';
 }
-string article::getManufacturer() const {
+string Article::getManufacturer() const {
 	return manufacturer;
 }
 
-void article::setStock(int vooraad) {
+void Article::setStock(int vooraad) {
 	stock = vooraad;
 }
-int article::getStock() const{
+int Article::getStock() const{
 	return stock;
 }
 
-void article::setDiameter(const int dia) {
+void Article::setDiameter(const int dia) {
 	diameter = dia;
 }
-int article::getDiameter() const {
+int Article::getDiameter() const {
 	return diameter;
 }
 
-void article::setPrice(float prijs) {
+void Article::setPrice(float prijs) {
 	price = prijs;
 }
-float article::getPrice() const {
+float Article::getPrice() const {
 	return price;
 }
 
-void article::setType(const char typ) {
+void Article::setType(const char typ) {
 	type = typ;
 }
-char article::getType() const {
+char Article::getType() const {
 	return type;
 }
 
-string article::toString() const {
+string Article::toString() const {
 	string type;
 	if (getType() == 'r' || getType() == 'R')
 		type = "Rim";
@@ -75,7 +73,7 @@ string article::toString() const {
 	return stream.str();
 }
 
-string article::toTable() const {
+string Article::toTable() const {
 	string type;
 	if (getType() == 'r' || getType() == 'R')
 		type = "Rim";
@@ -87,28 +85,13 @@ string article::toTable() const {
 	return stream.str();
 }
 
-void article::toFile(const static string& file, int* pos) {
-	ofstream outFile{file, ios::out | ios::binary};
-
-	if (!outFile) {
-		cerr << "File could not be opened." << endl;
-		exit(EXIT_FAILURE);
-	}
-
+void Article::toFile(ofstream outFile, int* pos) {
 	outFile.seekp(*pos);
-	outFile.write(reinterpret_cast<char*>(this), sizeof(article));
+	outFile.write(reinterpret_cast<char*>(this), sizeof(Article));
 	*pos = outFile.tellp();
 }
 
-void article::fromFile(const static string& file, int* pos) {
-	ifstream inFile{file, ios::in | ios::binary};
-	
-	if (!inFile) {
-		cerr << "File could not be opened." << endl;
-		exit(EXIT_FAILURE);
-	}
-
+void Article::fromFile(ifstream inFile, int* pos) {
 	inFile.seekg(*pos);
-	inFile.read(reinterpret_cast<char*>(this), sizeof(article));
-	*pos = inFile.tellg();
+	inFile.read(reinterpret_cast<char*>(this), sizeof(Article));
 }

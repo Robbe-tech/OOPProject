@@ -3,12 +3,12 @@
 #define COLOR 10
 
 #include <string>
-#include "article.h"
+#include "Article.h"
 
-class rim : public article {
+class Rim : public Article {
 public:
-	rim(const string&, const string&, int, const int, float, const char, const bool, const string&, const int);
-	virtual ~rim() = default;
+	Rim(const string&, const string&, int, const int, float, const char, const bool, const string&, const int);
+	virtual ~Rim() = default;
 
 	void setAluminum(const bool);
 	int getAluminum() const;
@@ -22,8 +22,8 @@ public:
 	virtual string toString() const override;
 	virtual string toTable() const override;
 
-	virtual void toFile(const static string&, int*) override;
-	virtual void fromFile(const static string&, int*) override;
+	virtual void toFile(ofstream, int*) override;
+	virtual void fromFile(ifstream, int*) override;
 private:
 	bool aluminum;
 	char color[COLOR];

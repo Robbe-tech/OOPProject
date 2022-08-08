@@ -1,23 +1,23 @@
 #ifndef INVOICE_H
 #define INVOICE_H
-#define ARTIKELEN 50
+#define ARTIEKELEN 50
 
 #include <string>
 #include <array>
-#include "company.h"
-#include "rim.h"
-#include "tire.h"
+#include "Company.h"
+#include "Rim.h"
+#include "Tire.h"
 
-class invoice{
+class Invoice{
 public:
-	invoice(customer&, array<article, ARTIKELEN>&, float, int);
-	virtual ~invoice() = default;
+	Invoice(Customer&, array<Article, ARTIEKELEN>&, float, int);
+	virtual ~Invoice() = default;
 
-	void setCustomer(customer&);
-	customer getCustomer();
+	void setCustomer(Customer&);
+	Customer getCustomer();
 	
-	void setArticles(array<article, ARTIKELEN>&);
-	array<article, ARTIKELEN> getArticles() const;
+	void setArticles(array<Article, ARTIEKELEN>&);
+	array<Article, ARTIEKELEN> getArticles() const;
 
 	void setPrice(float);
 	float getPrice() const;
@@ -31,11 +31,11 @@ public:
 	string toString() const;
 	string toTable() const;
 
-	void toFile(const static string&, int*);
-	void fromFile(const static string&, int*);
+	void toFile(ofstream, int*);
+	void fromFile(ifstream, int*);
 private:
-	customer& customers;
-	array<article, ARTIKELEN>& articles;
+	Customer& customers;
+	array<Article, ARTIEKELEN>& articles;
 	float price;
 	int discount;
 };
