@@ -65,14 +65,17 @@ string Tire::toTable() const {
 	return stream.str();
 }
 
-void Tire::toFile(ofstream outFile, int* pos) {
+void Tire::toFile(ofstream& outFile, int* pos) {
 	outFile.seekp(*pos);
 	outFile.write(reinterpret_cast<char*>(this), sizeof(Tire));
 	*pos = outFile.tellp();
 }
 
-void Tire::fromFile(ifstream inFile, int* pos) {
+void Tire::fromFile(ifstream& inFile, int* pos) {
 	inFile.seekg(*pos);
-	inFile.read(reinterpret_cast<char*>(this), sizeof(Tire));
-	*pos = inFile.tellg();
+	if (inFile.peek() != EOF)
+	{
+		inFile.read(reinterpret_cast<char*>(this), sizeof(Tire));
+		*pos = inFile.tellg();
+	}
 }

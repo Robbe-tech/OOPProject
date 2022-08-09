@@ -5,12 +5,12 @@
 #include <cstdlib>
 #include "Company.h"
 
-Company::Company(const string& naam, string& adres, char typ, string& vat, int korting) : Customer(naam, adres, typ) {
+Company::Company(const string& naam, const string& adres, char typ, const string& vat, int korting) : Customer(naam, adres, typ) {
 	setVAT(vat);
 	setVolumeDiscount(korting);
 }
 
-void Company::setVAT(string& vat) {
+void Company::setVAT(const string& vat) {
 	size_t length{ vat.size() };
 	length = (length < VATNUM ? length : (VATNUM - 1));
 	vat.copy(VAT, length);
@@ -39,14 +39,17 @@ string Company::toTable() const {
 	return stream.str();
 }
 
-void Company::toFile(ofstream outFile, int* pos) {
+void Company::toFile(ofstream& outFile, int* pos) {
 	outFile.seekp(*pos);
 	outFile.write(reinterpret_cast<char*>(this), sizeof(Company));
 	*pos = outFile.tellp();
 }
 
-void Company::fromFile(ifstream inFile, int* pos) {
+void Company::fromFile(ifstream& inFile, int* pos) {
 	inFile.seekg(*pos);
-	inFile.read(reinterpret_cast<char*>(this), sizeof(Company));
-	*pos = inFile.tellg();
+	if (inFile.peek() != EOF)
+	{
+		inFile.read(reinterpret_cast<char*>(this), sizeof(Company));
+		*pos = inFile.tellg();
+	}
 }

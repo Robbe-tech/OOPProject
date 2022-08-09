@@ -85,13 +85,16 @@ string Article::toTable() const {
 	return stream.str();
 }
 
-void Article::toFile(ofstream outFile, int* pos) {
+void Article::toFile(ofstream& outFile, int* pos) {
 	outFile.seekp(*pos);
 	outFile.write(reinterpret_cast<char*>(this), sizeof(Article));
 	*pos = outFile.tellp();
 }
 
-void Article::fromFile(ifstream inFile, int* pos) {
+void Article::fromFile(ifstream& inFile, int* pos) {
 	inFile.seekg(*pos);
-	inFile.read(reinterpret_cast<char*>(this), sizeof(Article));
+	if (inFile.peek() != EOF)
+	{
+		inFile.read(reinterpret_cast<char*>(this), sizeof(Article));
+	}
 }

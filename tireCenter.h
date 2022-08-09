@@ -12,31 +12,31 @@
 
 class TireCenter {
 public:
-	TireCenter(string&, string&, array<Article, ARTIEKELEN>&, array<Customer, KLANTEN>&);
+	TireCenter(const string&, const string&, array<Article&, ARTIEKELEN>&, array<Customer&, KLANTEN>&);
 	virtual ~TireCenter() = default;
 
-	void setName(string&);
+	void setName(const string&);
 	string getName() const;
 
-	void setAddress(string&);
+	void setAddress(const string&);
 	string getAddress() const;
 
-	void setArticles(array<Article, ARTIEKELEN>&);
-	array<Article, ARTIEKELEN> getArticles() const;
+	void setArticles(array<Article&, ARTIEKELEN>&);
+	array<Article&, ARTIEKELEN> getArticles() const;
 
-	void setCustomers(array<Customer, KLANTEN>&);
-	array<Customer, KLANTEN> getCustomers() const;
+	void setCustomers(array<Customer&, KLANTEN>&);
+	array<Customer&, KLANTEN> getCustomers() const;
 
 	string toString() const;
 	string toTable() const;
 
-	void toFile(ofstream, int*);
-	void fromFile(ifstream, int*);
+	void toFile(ofstream&);
+	void fromFile(ifstream&);
 private:
 	char name[NAME];
 	char address[ADDRESS];
-	array<Article, ARTIEKELEN>& articles;
-	array<Customer, KLANTEN>& customers;
+	array<Article&, ARTIEKELEN>& articles;
+	array<Customer&, KLANTEN>& customers;
 };
 
 #endif

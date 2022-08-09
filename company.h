@@ -7,10 +7,10 @@
 
 class Company : public Customer{
 public:
-	Company(const string&, string&, char, string&, int);
+	Company(const string&, const string&, char, const string&, int);
 	virtual ~Company() = default;
 
-	void setVAT(string&);
+	void setVAT(const string&);
 	string getVAT() const;
 
 	void setVolumeDiscount(int);
@@ -19,8 +19,8 @@ public:
 	virtual string toString() const override;
 	virtual string toTable() const override;
 
-	virtual void toFile(ofstream, int*) override;
-	virtual void fromFile(ifstream, int*) override;
+	virtual void toFile(ofstream&, int*) override;
+	virtual void fromFile(ifstream&, int*) override;
 private:
 	char VAT[VATNUM];
 	int volumeDiscount;

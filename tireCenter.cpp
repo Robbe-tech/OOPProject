@@ -5,14 +5,14 @@
 #include <cstdlib>
 #include "TireCenter.h"
 
-TireCenter::TireCenter(string& naam, string& adres, array<Article, ARTIEKELEN>& artiekels, array<Customer, KLANTEN>& klanten) : articles(artiekels), customers(klanten) {
+TireCenter::TireCenter(const string& naam, const string& adres, array<Article&, ARTIEKELEN>& artiekels, array<Customer&, KLANTEN>& klanten) : articles(artiekels), customers(klanten) {
 	setName(naam);
 	setAddress(adres);
 	setArticles(artiekels);
 	setCustomers(klanten);
 }
 
-void TireCenter::setName(string& naam) {
+void TireCenter::setName(const string& naam) {
 	size_t length{ naam.size() };
 	length = (length < NAME ? length : (NAME - 1));
 	naam.copy(name, length);
@@ -22,32 +22,27 @@ string TireCenter::getName() const {
 	return name;
 }
 
-void TireCenter::setAddress(string& adres) {
+void TireCenter::setAddress(const string& adres) {
 	size_t length{ adres.size() };
 	length = (length < ADDRESS ? length : (ADDRESS - 1));
 	adres.copy(address, length);
-	adres[length] = '\0';
+	address[length] = '\0';
 }
 string TireCenter::getAddress() const {
 	return address;
 }
 
-void TireCenter::setArticles(array<Article, ARTIEKELEN>& artiekels) {
-	int i = 0;
-	while (artiekels[i].getType() != '\0' && i < ARTIEKELEN)
-	{
-		articles[i] = artiekels[i];
-		i++;
-	}
+void TireCenter::setArticles(array<Article&, ARTIEKELEN>& artiekels) {
+	articles = artiekels;
 }
-array<Article, ARTIEKELEN> TireCenter::getArticles() const {
+array<Article&, ARTIEKELEN> TireCenter::getArticles() const {
 	return articles;
 }
 
-void TireCenter::setCustomers(array<Customer, KLANTEN>& klant) {
+void TireCenter::setCustomers(array<Customer&, KLANTEN>& klant) {
 	customers = klant;
 }
-array<Customer, KLANTEN> TireCenter::getCustomers() const {
+array<Customer&, KLANTEN> TireCenter::getCustomers() const {
 	return customers;
 }
 
@@ -77,14 +72,13 @@ string TireCenter::toTable() const {
 	return stream.str();
 }
 
-void TireCenter::toFile(ofstream outFile, int* pos) {
-	outFile.seekp(*pos);
+void TireCenter::toFile(ofstream& outFile) {
 	outFile.write(reinterpret_cast<char*>(this), sizeof(TireCenter));
-	*pos = outFile.tellp();
 }
 
-void TireCenter::fromFile(ifstream inFile, int* pos) {
-	inFile.seekg(*pos);
-	inFile.read(reinterpret_cast<char*>(this), sizeof(TireCenter));
-	*pos = inFile.tellg();
+void TireCenter::fromFile(ifstream& inFile) {
+	if (inFile.peek() != EOF)
+	{
+		inFile.read(reinterpret_cast<char*>(this), sizeof(TireCenter));
+	}
 }

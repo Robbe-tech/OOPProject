@@ -37,8 +37,8 @@ public:
 	virtual string toString() const;
 	virtual string toTable() const;
 
-	virtual void toFile(ofstream, int*);
-	virtual void fromFile(ifstream, int*);
+	virtual void toFile(ofstream&, int*);
+	virtual void fromFile(ifstream&, int*);
 private:
 	char name[CHAR];
 	char manufacturer[CHAR];

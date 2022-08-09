@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include "Invoice.h"
 
-Invoice::Invoice(Customer& klant, array<Article, ARTIEKELEN>& artiekels, float prijs, int korting) : customers(klant), articles(artiekels) {
+Invoice::Invoice(Customer& klant, array<Article&, ARTIEKELEN>& artiekels, float prijs, int korting) : customers(klant), articles(artiekels) {
 	setCustomer(klant);
 	setArticles(artiekels);
 	setPrice(prijs);
@@ -20,16 +20,11 @@ Customer Invoice::getCustomer(){
 	return Invoice::customers;
 }
 
-void Invoice::setArticles(array<Article, ARTIEKELEN>& artiekels) {
-	int i = 0;
-	while (artiekels[i].getType() != '\0' && i < ARTIEKELEN)
-	{
-		Invoice::articles[i] = artiekels[i];
-		i++;
-	}
+void Invoice::setArticles(array<Article&, ARTIEKELEN>& artiekels) {
+	articles = artiekels;
 }
-std::array<Article, ARTIEKELEN> Invoice::getArticles() const {
-	return Invoice::articles;
+std::array<Article&, ARTIEKELEN> Invoice::getArticles() const {
+	return articles;
 }
 
 void Invoice::setPrice(float prijs) {
@@ -74,14 +69,13 @@ string Invoice::toTable() const {
 	return stream.str();
 }
 
-void Invoice::toFile(ofstream outFile, int* pos) {
-	outFile.seekp(*pos);
+void Invoice::toFile(ofstream& outFile) {
 	outFile.write(reinterpret_cast<char*>(this), sizeof(Invoice));
-	*pos = outFile.tellp();
 }
 
-void Invoice::fromFile(ifstream inFile, int* pos) {
-	inFile.seekg(*pos);
-	inFile.read(reinterpret_cast<char*>(this), sizeof(Invoice));
-	*pos = inFile.tellg();
+void Invoice::fromFile(ifstream& inFile) {
+	if (inFile.peek() != EOF)
+	{
+		inFile.read(reinterpret_cast<char*>(this), sizeof(Invoice));
+	}
 }
