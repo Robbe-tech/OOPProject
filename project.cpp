@@ -19,24 +19,24 @@
 
 using namespace std;
 
-void readarticles(const static string&, int*, vector<Article*>, vector<int>, vector<int>);
+void readarticles(const static string&, int*, vector<Article*>, vector<int>);
 void searcharticle(vector<Article*>);
 void addarticle(vector<Article*>);
 void deletearticle(vector<Article*>);
 void changearticle(vector<Article*>);
 
-void readcustomers(const static string&, int*, vector<Customer*>, vector<int>, vector<int>);
+void readcustomers(const static string&, int*, vector<Customer*>, vector<int>);
 void searchcustomer(vector<Customer*>);
 void addcustomer(vector<Customer*>);
 void deletecustomer(vector<Customer*>);
 void changecustomer(vector<Customer*>);
 
-void readinvoices(const static string&, vector<Invoice*>, vector<int>);
-void checkinvoice(vector<Invoice*>);
+void readinvoices(const static string&, vector<Invoice*>);
+void searchinvoice(vector<Invoice*>);
 void makeorder(vector<Invoice*>);
-void changeinvoice(vector<Invoice*>);
 
-void readtirecenters(const static string&, vector<TireCenter*>, vector<int>);
+void readtirecenters(const static string&, vector<TireCenter*>);
+void searchtirecenter(vector<TireCenter*>);
 void addtirecenter(vector<TireCenter*>);
 
 void updatearticle(vector<Article*>);				//update single article
@@ -56,22 +56,17 @@ inline bool fileTest(const static string&);
 
 int main(void) {
 	const static string articleFile = "Articles.dat", customerFile = "Customers.dat", invoiceFile = "Invoices.dat", tireCenterFile = "TireCenters.dat", deletedArticles = "DeletedArticles.dat", deletedCustomers = "DeletedCustomers.dat";
-	int articlePos = 0, customerPos = 0, invoicePos = 0, tireCenterPos = 0, i = 0;
+	int articlePos = 0, customerPos = 0, invoicePos = 0, tireCenterPos = 0, i, id;
 
 	vector<Article*> articles{};
 	vector<Customer*> customers{};
 	vector<Invoice*> invoices{};
 	vector<TireCenter*> tireCenters{};
 
-	vector<int> articlesID{};				//id van producten
-	vector<int> customersID{};
-	vector<int> invoicesID{};
-	vector<int> tireCentersID{};
-
 	vector<int> articlesPos{};				//binaire positie van volgende product
 	vector<int> customersPos{};				//posities zijn niet nodig voor invoices en tirecenters omdat ze altijd dezelfde grootte hebben
 
-	char employee, option;
+	char employee, option, checkcenter;
 
 	cout << "Are you the owner (o) or employee (e): " << std::endl;
 	cin >> employee;
@@ -126,10 +121,10 @@ int main(void) {
 	}
 
 	else {
-		readarticles(articleFile, &articlePos, articles, articlesID, articlesPos);
-		readcustomers(customerFile, &customerPos, customers, customersID, customersPos);
-		readinvoices(invoiceFile, invoices, invoicesID);
-		readtirecenters(tireCenterFile, tireCenters, tireCentersID);
+		readarticles(articleFile, &articlePos, articles, articlesPos);
+		readcustomers(customerFile, &customerPos, customers, customersPos);
+		readinvoices(invoiceFile, invoices);
+		readtirecenters(tireCenterFile, tireCenters);
 
 		if (articles.empty() || customers.empty() || tireCenters.empty()) {
 			if (articles.empty()) {
@@ -171,62 +166,90 @@ int main(void) {
 		}
 
 		else {
-			while (option != 'e')
-			{
-				if (employee == 'o')
-				{
-					cout << "Choose between adding an article (a), searching articles (s), deleting an article (d), changing an article (c), checking invoices (i), placing an order (p), deleting customers (b), searching customers (m), changing customers (h), adding customers(n) and updating stock (u) and exiting (e)";
-					cin >> option;
+			searchtirecenter(tireCenters);
+			cout << "Did you see your tire center in the list (y/n): ";
+			cin >> checkcenter;
+			while (!(checkcenter == 'y' || checkcenter == 'Y' || checkcenter == 'n' || checkcenter == 'N')) {
+				cout << "Please enter a valid awnser (y or n): ";
+				cin >> checkcenter;
+			}
+
+			if (checkcenter == 'n' || checkcenter == 'N') {
+				if (employee == 'o' || employee == 'O') {
+					cout << "Please add your tire center." << endl;
+					addtirecenter(tireCenters);
 				}
-				else
-				{
-					cout << "Choose between searching articles (s), changing an article (c), checking invoices (i), placing an order (p), searching customers (m), changing customers (h), adding customers(n) and updating stock (u) and exiting (e)";
-					cin >> option;
+				else {
+					cout << "Please contact the owner." << endl;
+				}
+			}
+
+			else {
+				cout << "Please choose the id of the tire center you are from (if you see multiple of your tire center choose the id of the last one): ";
+				cin >> id;
+
+				while (id > tireCenters.size() || id <= 0) {
+					cout << "Please choose a valid id: ";
+					cin >> id;
 				}
 
-				if (option == 'a' && employee == 'o')
+				while (!(option == 'e' || option == 'E'))
 				{
-					addarticle(tires, rims);
-				}
-				if (option == 's')
-				{
-					searcharticle(tires, rims);
-				}
-				if (option == 'd' && employee == 'o')
-				{
-					deletearticle(tires, rims);
-				}
-				if (option == 'c')
-				{
-					changearticle(tires, rims);
-				}
-				if (option == 'i')
-				{
-					checkinvoice(invoices);
-				}
-				if (option == 'p')
-				{
-					makeorder(tires, rims, customers, companies, invoices);
-				}
-				if (option == 'b' && employee == 'o')
-				{
-					deletecustomer(customers, companies);
-				}
-				if (option == 'm')
-				{
-					searchcustomer(customers, companies);
-				}
-				if (option == 'h')
-				{
-					changecustomer(customers, companies);
-				}
-				if (option == 'n')
-				{
-					addcustomer(customers, companies);
-				}
-				if (option == 'u')
-				{
-					updatestock(tires, rims);
+					if (employee == 'o' || employee == 'O')
+					{
+						cout << "Choose between adding an article (a), searching articles (s), deleting an article (d), changing an article (c), checking invoices (i), placing an order (p), deleting customers (b), searching customers (m), changing customers (h), adding customers(n) and updating stock (u) and exiting (e)";
+						cin >> option;
+					}
+					else
+					{
+						cout << "Choose between searching articles (s), changing an article (c), checking invoices (i), placing an order (p), searching customers (m), changing customers (h), adding customers(n) and updating stock (u) and exiting (e)";
+						cin >> option;
+					}
+
+					if (option == 's' || option == 'S')
+					{
+						searcharticle(articles);
+					}
+					if ((option == 'a' || option == 'A') && (employee == 'o' || employee == 'O'))
+					{
+						addarticle(articles);
+					}
+					if ((option == 'd' || option == 'D') && (employee == 'o' || employee == 'O'))
+					{
+						deletearticle(articles);
+					}
+					if (option == 'c' || option == 'C')
+					{
+						changearticle(articles);
+					}
+					if (option == 'i' || option == 'I')
+					{
+						searchinvoice(invoices);
+					}
+					if (option == 'p' || option == 'P')
+					{
+						makeorder(invoices);
+					}
+					if ((option == 'b' || option == 'B') && (employee == 'o' || employee == 'O'))
+					{
+						deletecustomer(customers);
+					}
+					if (option == 'm' || option == 'M')
+					{
+						searchcustomer(customers);
+					}
+					if (option == 'h' || option == 'H')
+					{
+						changecustomer(customers);
+					}
+					if (option == 'n' || option == 'N')
+					{
+						addcustomer(customers);
+					}
+					if (option == 'u' || option == 'U')
+					{
+						updatestock(articles);
+					}
 				}
 			}
 		}
@@ -235,13 +258,11 @@ int main(void) {
 	return 0;
 }
 
-void readarticles(const static string& articleFile, int* articlePos, vector<Article*> articles, vector<int> articlesID, vector<int> articlesPos) {
+void readarticles(const static string& articleFile, int* articlePos, vector<Article*> articles, vector<int> articlesPos) {
 	ifstream inArticle(articleFile, ios::in | ios::binary);
 	Article checkArticleType{ "", "", NULL, NULL, NULL, '\0' };
 	Rim tempRim{ "", "", NULL, NULL, NULL, '\0', false, "", NULL };
 	Tire tempTire{ "", "", NULL, NULL, NULL, '\0', NULL, NULL, "", '\0' };
-
-	int id = 1;
 
 	if (!inArticle) {
 		cerr << "The article file could not be opened." << endl;
@@ -259,17 +280,13 @@ void readarticles(const static string& articleFile, int* articlePos, vector<Arti
 			tempTire.fromFile(inArticle, articlePos);
 			articles.push_back(new Tire(tempTire));
 		}
-
-		articlesID.push_back(id);
 		articlesPos.push_back(*articlePos);
-
-		id++;
 		checkArticleType.setType('\0');
 		checkArticleType.fromFile(inArticle, articlePos);
 	}
 }
 
-void searcharticle(tire tires[TOTTIRE], rim rims[TOTRIMS])
+void searcharticle(vector<Article*> articles)
 {
 	char detail, type, season, filter, choice = 'l';
 	std::string search, name, manufacturer, colorspeed;
@@ -286,11 +303,11 @@ void searcharticle(tire tires[TOTTIRE], rim rims[TOTRIMS])
 		{
 			cout << "Do you wish to look at all of the items (all), or look for a specific object (just type what you are looking for)?" << std::endl;
 			getline(cin, search);
-			if (search.compare("all") == 0)
+			if (search.compare("all") == 0 || search.compare("all") == 0)
 			{
 				cout << "Do you wish to see details yes (y), no (any other letter)?" << std::endl;
 				cin >> detail;
-				if (detail == 'y')
+				if (detail == 'y' || detail == 'Y')
 				{
 					stream << "Name" << setw(CHAR) << "Manufacturer" << setw(CHAR) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(10) << "Type" << setw(5) << "Width" << setw(10) << "Height/Aluminum" << setw(20) << "Color/Season" << setw(20) << "SpeedIndex";
 					while (tires[i].getPrice() > 0)
@@ -868,26 +885,26 @@ void addarticle(vector<Article*> articles)
 	}
 }
 
-void deletearticle(tire tires[TOTTIRE], rim rims[TOTRIMS])
+void deletearticle(vector<Article*> articles)
 {
 	;
 }
 
-void changearticle(tire tires[TOTTIRE], rim rims[TOTRIMS])
+void changearticle(vector<Article*> articles)
 {
 	;
 }
 
-void deletecustomer(customer customers[CUSTOMERS], company companies[COMPANIES])
+void deletecustomer(vector<Customer*> customers)
 {
 	;
 }
 
-void readcustomers(const static string& customerFile, int* customerPos, vector<Customer*> customers, vector<int> customersID, vector<int> customersPos) {
+void readcustomers(const static string& customerFile, int* customerPos, vector<Customer*> customers, vector<int> customersPos) {
 	ifstream inCustomer(customerFile, ios::in | ios::binary);
 	Customer checkCustomer{ "", "", '\0' };
 	Company tempCompany{ "", "", '\0', "", NULL };
-	int id = 1, tempPos = *customerPos;
+	int tempPos = *customerPos;
 
 	if (!inCustomer) {
 		cerr << "The cusomer file could not be opened." << endl;
@@ -905,38 +922,33 @@ void readcustomers(const static string& customerFile, int* customerPos, vector<C
 		else {
 			customers.push_back(new Customer(checkCustomer));
 		}
-
-		customersID.push_back(id);
 		customersPos.push_back(*customerPos);
-
-		id++;
 		tempPos = *customerPos;
 		checkCustomer.setType('\0');
 		checkCustomer.fromFile(inCustomer, customerPos);
 	}
 }
 
-void searchcustomer(customer customers[CUSTOMERS], company companies[COMPANIES])
+void searchcustomer(vector<Customer*> customers)
 {
 	;
 }
 
-void changecustomer(customer customers[CUSTOMERS], company companies[COMPANIES])
+void changecustomer(vector<Customer*> customers)
 {
 	;
 }
 
-void addcustomer(customer customers[CUSTOMERS], company companies[COMPANIES])
+void addcustomer(vector<Customer*> customers)
 {
 	;
 }
 
-void readinvoices(const static string& invoiceFile, vector<Invoice*> invoices, vector<int> invoicesID) {
+void readinvoices(const static string& invoiceFile, vector<Invoice*> invoices) {
 	ifstream inInvoice(invoiceFile, ios::in | ios::binary);
 	Customer customer{ "", "", '\0' };
 	array<Article&, ARTIEKELEN> articles{};
 	Invoice tempInvoice{ customer, articles, NULL, NULL };
-	int id = 1;
 
 	if (!inInvoice) {
 		cerr << "The cusomer file could not be opened." << endl;
@@ -947,32 +959,28 @@ void readinvoices(const static string& invoiceFile, vector<Invoice*> invoices, v
 
 	while (tempInvoice.getPrice() != NULL) {
 		invoices.push_back(new Invoice(tempInvoice));
-		invoicesID.push_back(id);
-
-		id++;
 		tempInvoice.setPrice(NULL);
 		tempInvoice.fromFile(inInvoice);
 	}
 }
 
-void checkinvoice(invoice invoices[INVOICES])
+void searchinvoice(vector<Invoice*> invoices)
 {
 	;
 }
 
-void makeorder(tire tires[TOTTIRE], rim rims[TOTRIMS], customer customers[CUSTOMERS], company companies[COMPANIES], invoice invoices[INVOICES])
+void makeorder(vector<Invoice*> invoices)
 {
 	;
 }
 
 void changeinvoice(vector<Invoice*>);
 
-void readtirecenters(const static string& tireCenterFile, vector<TireCenter*> tireCenters, vector<int> tireCentersID) {
+void readtirecenters(const static string& tireCenterFile, vector<TireCenter*> tireCenters) {
 	ifstream inTireCenter(tireCenterFile, ios::in | ios::binary);
 	array<Customer&, KLANTEN> customers{};
 	array<Article&, ARTIEKELEN> articles{};
 	TireCenter tempTireCenter{ "", "", articles, customers };
-	int id = 1;
 
 	if (!inTireCenter) {
 		cerr << "The cusomer file could not be opened." << endl;
@@ -983,22 +991,47 @@ void readtirecenters(const static string& tireCenterFile, vector<TireCenter*> ti
 
 	while (tempTireCenter.getName() != "") {
 		tireCenters.push_back(new TireCenter(tempTireCenter));
-		tireCentersID.push_back(id);
-
-		id++;
 		tempTireCenter.setName("");
 		tempTireCenter.fromFile(inTireCenter);
 	}
 }
 
+void searchtirecenter(vector<TireCenter*> tireCenters) {
+	int i, id;
+	char choice, redo = 'r';
+	ostringstream stream;
+	
+	while (redo == 'r' || redo == 'R')
+	cout << "These are all current tire centers (Some may show up more than once due to too many customers)." << endl;
+	stream << "ID" << setw(3) << "Name" << setw(NAME) << "Address" << setw(ADDRESS) << "Article Name" << setw(CHAR) << "Customer Name" << endl;
+	for (i = 0; i < tireCenters.size(); i++) {
+		stream << (i + 1) << setw(3) << tireCenters[i]->toTable() << endl;
+	}
+
+	cout << stream.str() << endl
+		<< "Do you wish to view any tire centers in detail (y for yes, anything else for no): ";
+	cin >> choice;
+	if (choice == 'y' || choice == 'Y') {
+		cout << "Please choose the id of the tire center you wish to view: ";
+		cin >> id;
+		while (id > tireCenters.size() || id <= 0) {
+			cout << "Please choose a valid id: ";
+			cin >> id;
+		}
+		cout << tireCenters[id - 1]->toString() << endl
+			<< "If you wish to view the table again enter r else enter anything else: ";
+		cin >> redo;
+	}
+}
+
 void addtirecenter(vector<TireCenter*>);
 
-void updatestock(tire tires[TOTTIRE], rim rims[TOTRIMS])
+void updatestock(vector<Article*> articles)
 {
 	;
 }
 
-void update(tire tires[TOTTIRE], rim rims[TOTRIMS], article artikel, int change)
+void update(vector<Article*> articles)
 {
 	;
 }
