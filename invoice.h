@@ -10,14 +10,14 @@
 
 class Invoice{
 public:
-	Invoice(Customer&, array<Article&, ARTIEKELEN>&, float, int);
+	Invoice(Customer, array<Article, ARTIEKELEN>&, float, int);
 	virtual ~Invoice() = default;
 
-	void setCustomer(Customer&);
+	void setCustomer(Customer);
 	Customer getCustomer();
 	
-	void setArticles(array<Article&, ARTIEKELEN>&);
-	array<Article&, ARTIEKELEN> getArticles() const;
+	void setArticles(array<Article, ARTIEKELEN>&);
+	array<Article, ARTIEKELEN> getArticles() const;
 
 	void setPrice(float);
 	float getPrice() const;
@@ -34,8 +34,8 @@ public:
 	void toFile(ofstream&);
 	void fromFile(ifstream&);
 private:
-	Customer& customers;
-	array<Article&, ARTIEKELEN>& articles;
+	Customer customers;
+	array<Article, ARTIEKELEN>& articles;
 	float price;
 	int discount;
 };

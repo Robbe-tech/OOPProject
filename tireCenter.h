@@ -12,7 +12,7 @@
 
 class TireCenter {
 public:
-	TireCenter(const string&, const string&, array<Article&, ARTIEKELEN>&, array<Customer&, KLANTEN>&);
+	TireCenter(const string&, const string&, array<Article, ARTIEKELEN>&, array<Customer, KLANTEN>&);
 	virtual ~TireCenter() = default;
 
 	void setName(const string&);
@@ -21,11 +21,11 @@ public:
 	void setAddress(const string&);
 	string getAddress() const;
 
-	void setArticles(array<Article&, ARTIEKELEN>&);
-	array<Article&, ARTIEKELEN> getArticles() const;
+	void setArticles(array<Article, ARTIEKELEN>&);
+	array<Article, ARTIEKELEN> getArticles() const;
 
-	void setCustomers(array<Customer&, KLANTEN>&);
-	array<Customer&, KLANTEN> getCustomers() const;
+	void setCustomers(array<Customer, KLANTEN>&);
+	array<Customer, KLANTEN> getCustomers() const;
 
 	string toString() const;
 	string toTable() const;
@@ -35,8 +35,8 @@ public:
 private:
 	char name[NAME];
 	char address[ADDRESS];
-	array<Article&, ARTIEKELEN>& articles;
-	array<Customer&, KLANTEN>& customers;
+	array<Article, ARTIEKELEN>& articles;
+	array<Customer, KLANTEN>& customers;
 };
 
 #endif

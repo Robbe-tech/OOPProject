@@ -5,14 +5,14 @@
 #include <cstdlib>
 #include "Invoice.h"
 
-Invoice::Invoice(Customer& klant, array<Article&, ARTIEKELEN>& artiekels, float prijs, int korting) : customers(klant), articles(artiekels) {
+Invoice::Invoice(Customer klant, array<Article, ARTIEKELEN>& artiekels, float prijs, int korting) : customers(klant), articles(artiekels) {
 	setCustomer(klant);
 	setArticles(artiekels);
 	setPrice(prijs);
 	setDiscount(korting);
 }
 
-void Invoice::setCustomer(Customer& klant) {
+void Invoice::setCustomer(Customer klant) {
 	customers = klant;
 }
 
@@ -20,10 +20,10 @@ Customer Invoice::getCustomer(){
 	return Invoice::customers;
 }
 
-void Invoice::setArticles(array<Article&, ARTIEKELEN>& artiekels) {
+void Invoice::setArticles(array<Article, ARTIEKELEN>& artiekels) {
 	articles = artiekels;
 }
-std::array<Article&, ARTIEKELEN> Invoice::getArticles() const {
+std::array<Article, ARTIEKELEN> Invoice::getArticles() const {
 	return articles;
 }
 

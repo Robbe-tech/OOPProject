@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include "TireCenter.h"
 
-TireCenter::TireCenter(const string& naam, const string& adres, array<Article&, ARTIEKELEN>& artiekels, array<Customer&, KLANTEN>& klanten) : articles(artiekels), customers(klanten) {
+TireCenter::TireCenter(const string& naam, const string& adres, array<Article, ARTIEKELEN>& artiekels, array<Customer, KLANTEN>& klanten) : articles(artiekels), customers(klanten) {
 	setName(naam);
 	setAddress(adres);
 	setArticles(artiekels);
@@ -32,17 +32,17 @@ string TireCenter::getAddress() const {
 	return address;
 }
 
-void TireCenter::setArticles(array<Article&, ARTIEKELEN>& artiekels) {
+void TireCenter::setArticles(array<Article, ARTIEKELEN>& artiekels) {
 	articles = artiekels;
 }
-array<Article&, ARTIEKELEN> TireCenter::getArticles() const {
+array<Article, ARTIEKELEN> TireCenter::getArticles() const {
 	return articles;
 }
 
-void TireCenter::setCustomers(array<Customer&, KLANTEN>& klant) {
+void TireCenter::setCustomers(array<Customer, KLANTEN>& klant) {
 	customers = klant;
 }
-array<Customer&, KLANTEN> TireCenter::getCustomers() const {
+array<Customer, KLANTEN> TireCenter::getCustomers() const {
 	return customers;
 }
 
