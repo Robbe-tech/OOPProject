@@ -46,7 +46,7 @@ float Invoice::calculateDiscount() {
 	return totdis;
 }
 float Invoice::calculatePrice() {
-	float totprice = price - (100 - discount) * price / 100;
+	float totprice = price - calculateDiscount();
 	return totprice;
 }
 
@@ -69,7 +69,8 @@ string Invoice::toTable() const {
 	return stream.str();
 }
 
-void Invoice::toFile(ofstream& outFile) {
+void Invoice::toFile(ofstream& outFile, int loc) {
+	outFile.seekp(loc);
 	outFile.write(reinterpret_cast<char*>(this), sizeof(Invoice));
 }
 

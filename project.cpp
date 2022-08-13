@@ -27,30 +27,19 @@ void changearticle(const static string&, vector<Article*>, vector<int>);
 
 void readcustomers(const static string&, vector<Customer*>, vector<int>);
 void searchcustomer(vector<Customer*>);
-void addcustomer(vector<Customer*>);
-void deletecustomer(vector<Customer*>);
-void changecustomer(vector<Customer*>);
+void addcustomer(const static string&, vector<Customer*>, vector<int>);
+void deletecustomer(const static string&, vector<Customer*>, vector<int>, const static string&, vector<Customer*>, vector<int>);
+void changecustomer(const static string&, vector<Customer*>, vector<int>);
 
 void readinvoices(const static string&, vector<Invoice*>);
 void searchinvoice(vector<Invoice*>);
-void makeorder(vector<Invoice*>);
+void makeorder(const static string&, vector<Invoice*>, const static string&, vector<Article*>, vector<int>, const static string&, vector<Customer*>, vector<int>, const static string&, vector<TireCenter*>, int);
 
 void readtirecenters(const static string&, vector<TireCenter*>);
 void searchtirecenter(vector<TireCenter*>);
-void addtirecenter(vector<TireCenter*>);
+void addtirecenter(const static string&, vector<TireCenter*>, vector<Article*>, vector<Customer*>);
 
-void updatearticle(vector<Article*>);				//update single article
-void updatecustomer(vector<Customer*>);
-void updateinvoice(vector<Invoice*>);
-void updatetirecenter(vector<TireCenter*>);
-
-void updatearticles(vector<Article*>);				//update all articles
-void updatecustomers(vector<Customer*>);
-void updateinvoices(vector<Invoice*>);
-void updatetirecenters(vector<TireCenter*>);
-
-void updatestock(vector<Article*>);
-void update(vector<Article*>);
+void updatestock(const static string&, vector<Article*>, vector<int>, int, int);
 bool isSubstring(string, string);
 inline bool fileTest(const static string&);
 
@@ -70,7 +59,7 @@ int main(void) {
 	vector<int> customersPos{};
 	vector<int> deletedCustomersPos{};		//posities zijn niet nodig voor invoices en tirecenters omdat ze altijd dezelfde grootte hebben
 
-	char employee, option, checkcenter;
+	char employee, option = 'b', checkcenter;
 
 	cout << "Are you the owner (o) or employee (e): " << std::endl;
 	cin >> employee;
@@ -90,20 +79,37 @@ int main(void) {
 			}
 
 			cout << "Please add some customers." << endl;
-			addcustomer(customers);
+			addcustomer(customerFile, customers, customersPos);
 			while (customers.empty()) {
 				cout << "Please add at least one customer." << endl;
-				addcustomer(customers);
+				addcustomer(customerFile, customers, customersPos);
 			}
 
-			cout << "If you want you could add some invoices." << endl;
-			makeorder(invoices);
-			
 			cout << "Please add some tire centers." << endl;
-			addtirecenter(tireCenters);
+			addtirecenter(tireCenterFile, tireCenters, articles, customers);
 			while (tireCenters.empty()) {
 				cout << "Please add at least one tire center." << endl;
-				addtirecenter(tireCenters);
+				addtirecenter(tireCenterFile, tireCenters, articles, customers);
+			}
+
+			cout << "Enter the ID of the tire center you are from (0 to exit, you cant make invoices without it): ";
+			cin >> id;
+			while (id < 0 || id > tireCenters.size()) {
+				cout << "Enter a valid ID (0 to exit): ";
+				cin >> id;
+			}
+
+			if (id != 0) {
+				cout << "If you want you could add some invoices." << endl;
+				makeorder(invoiceFile, invoices, articleFile, articles, articlesPos, customerFile, customers, customersPos, tireCenterFile, tireCenters, id);
+			}
+
+			if (invoices.empty()) {
+				ofstream createInvoice(invoiceFile, ios::out | ios::binary);
+				if (!createInvoice) {
+					cerr << "Something went wrong creating the invoice file." << endl;
+					exit(EXIT_FAILURE);
+				}
 			}
 		}
 		else {
@@ -115,12 +121,27 @@ int main(void) {
 			}
 
 			if (option == 'y' || option == 'Y') {
-				addcustomer(customers);
+				addcustomer(customerFile, customers, customersPos);
 			}
 
-			updatearticles(articles);				//create files
-			updateinvoices(invoices);
-			updatetirecenters(tireCenters);
+			ofstream createArticle(articleFile, ios::in | ios::binary);				//create files
+			ofstream createInvoice(invoiceFile, ios::in | ios::binary);
+			ofstream createTireCenter(tireCenterFile, ios::in | ios::binary);
+
+			if (!createArticle) {
+				cerr << "Something went wrong creating the article file." << endl;
+				exit(EXIT_FAILURE);
+			}
+
+			if (!createInvoice) {
+				cerr << "Something went wrong creating the invoice file." << endl;
+				exit(EXIT_FAILURE);
+			}
+
+			if (!createTireCenter) {
+				cerr << "Something went wrong creating the tire center file." << endl;
+				exit(EXIT_FAILURE);
+			}
 		}
 	}
 
@@ -149,10 +170,10 @@ int main(void) {
 
 			if (customers.empty()) {
 				cout << "Please add some customers." << endl;
-				addcustomer(customers);
+				addcustomer(customerFile, customers, customersPos);
 				while (customers.empty()) {
 					cout << "Please add at least one customer." << endl;
-					addcustomer(customers);
+					addcustomer(customerFile, customers, customersPos);
 				}
 			}
 
@@ -162,10 +183,10 @@ int main(void) {
 				}
 				else {
 					cout << "Please add some tire centers." << endl;
-					addtirecenter(tireCenters);
+					addtirecenter(tireCenterFile, tireCenters, articles, customers);
 					while (tireCenters.empty()) {
 						cout << "Please add at least one tire center." << endl;
-						addtirecenter(tireCenters);
+						addtirecenter(tireCenterFile, tireCenters, articles, customers);
 					}
 				}
 			}
@@ -183,7 +204,7 @@ int main(void) {
 			if (checkcenter == 'n' || checkcenter == 'N') {
 				if (employee == 'o' || employee == 'O') {
 					cout << "Please add your tire center." << endl;
-					addtirecenter(tireCenters);
+					addtirecenter(tireCenterFile, tireCenters, articles, customers);
 				}
 				else {
 					cout << "Please contact the owner." << endl;
@@ -228,17 +249,9 @@ int main(void) {
 					{
 						changearticle(articleFile, articles, articlesPos);
 					}
-					if (option == 'i' || option == 'I')
-					{
-						searchinvoice(invoices);
-					}
-					if (option == 'p' || option == 'P')
-					{
-						makeorder(invoices);
-					}
 					if ((option == 'b' || option == 'B') && (employee == 'o' || employee == 'O'))
 					{
-						deletecustomer(customers);
+						deletecustomer(customerFile, customers, customersPos, deletedCustomerFile, deletedCustomers, deletedCustomersPos);
 					}
 					if (option == 'm' || option == 'M')
 					{
@@ -246,15 +259,23 @@ int main(void) {
 					}
 					if (option == 'h' || option == 'H')
 					{
-						changecustomer(customers);
+						changecustomer(customerFile, customers, customersPos);
 					}
 					if (option == 'n' || option == 'N')
 					{
-						addcustomer(customers);
+						addcustomer(customerFile, customers, customersPos);
+					}
+					if (option == 'i' || option == 'I')
+					{
+						searchinvoice(invoices);
+					}
+					if (option == 'p' || option == 'P')
+					{
+						makeorder(invoiceFile, invoices, articleFile, articles, articlesPos, customerFile, customers, customersPos, tireCenterFile, tireCenters, id);
 					}
 					if (option == 'u' || option == 'U')
 					{
-						updatestock(articles);
+						updatestock(articleFile, articles, articlesPos, 0, 0);
 					}
 				}
 			}
@@ -266,31 +287,32 @@ int main(void) {
 
 void readarticles(const static string& articleFile, vector<Article*> articles, vector<int> articlesPos) {
 	ifstream inArticle(articleFile, ios::in | ios::binary);
-	Article* checkarticle;
-	int* articlePos = 0;
+	int articlePos = 0;
+	Article checkArticleType{ "", "", NULL, NULL, NULL, '\0' };
+	Rim tempRim{"", "", NULL, NULL, NULL, '\0', false, "", NULL};
+	Tire tempTire{ "", "", NULL, NULL, NULL, '\0', NULL, NULL, "", '\0' };
 	articles.clear();
-	/*Rim tempRim{"", "", NULL, NULL, NULL, '\0', false, "", NULL};
-	Tire tempTire{ "", "", NULL, NULL, NULL, '\0', NULL, NULL, "", '\0' };*/
 
 	if (!inArticle) {
 		cerr << "The article file could not be opened." << endl;
 		exit(EXIT_FAILURE);
 	}
 
-	/*checkArticleType.fromFile(inArticle, articlePos);*/
+	checkArticleType.fromFile(inArticle, &articlePos);
 
-	while (inArticle.peek() != EOF) {
-		/*if (checkArticleType.getType() == 'r' || checkArticleType.getType() == 'R') {
-			tempRim.fromFile(inArticle, articlePos);
+	while (checkArticleType.getType() != '\0') {
+		if (checkArticleType.getType() == 'r' || checkArticleType.getType() == 'R') {
+			tempRim.fromFile(inArticle, &articlePos);
 			articles.push_back(new Rim(tempRim));
 		}
 		else {
-			tempTire.fromFile(inArticle, articlePos);
+			tempTire.fromFile(inArticle, &articlePos);
 			articles.push_back(new Tire(tempTire));
-		}*/
-		checkarticle->fromFile(inArticle, articlePos);
-		articlesPos.push_back(*articlePos);
-		articles.push_back(checkarticle);
+		}
+
+		articlesPos.push_back(articlePos);
+		checkArticleType.setType('\0');
+		checkArticleType.fromFile(inArticle, &articlePos);
 	}
 }
 
@@ -555,17 +577,14 @@ void addarticle(const static string& articleFile, vector<Article*> articles, vec
 
 			cout << "Is the rim made of aluminum (1) or not (0): ";
 			cin >> alu;
-			while (!(alu == 0 || alu == 1))
-			{
-				cout << "Enter either a 0 (not aluminum) or 1 aluminum: ";
+			while (!(alu == 0 || alu == 1)) {
+				cout << "Enter either a 0 (not aluminum) or 1 (aluminum): ";
 				cin >> alu;
 			}
-			if (alu == 0)
-			{
+			if (alu == 0) {
 				aluminum = false;
 			}
-			else
-			{
+			else {
 				aluminum = true;
 			}
 			
@@ -651,8 +670,15 @@ void deletearticle(const static string& articleFile, vector<Article*> articles, 
 
 void changearticle(const static string& articleFile, vector<Article*> articles, vector<int> articlesPos)
 {
-	char choice = 'l';
-	int id;
+	char choice = 'l', change = 'b', yes, season;
+	int id, dia, alu, pos, oristock, width, height;
+	float price;
+	bool aluminum;
+	string manufacturer, colorIndex;
+	Rim tempRim{ "", "", NULL, NULL, NULL, '\0', false, "", NULL };
+	Tire tempTire{ "", "", NULL, NULL, NULL, '\0', NULL, NULL, "", '\0' };
+	ifstream readArticle(articleFile, ios::in | ios::binary);
+	ofstream writeArticle(articleFile, ios::out | ios::binary);
 
 	while (!(choice == 'e' || choice == 'E')) {
 		cout << "Do you wish to search for an article (s), change an article (c) or exit (e): ";
@@ -672,9 +698,183 @@ void changearticle(const static string& articleFile, vector<Article*> articles, 
 			}
 
 			if (id != 0) {
-				cout << articles[id - 1]->toString() << endl
-					<< "What do you wish to change about the article, the name (n), the manufacturer (m), stock ammount (s),  ";
-				cin >> del;
+				if (!readArticle) {
+					cerr << "A problem occured opening the file." << endl;
+					exit(EXIT_FAILURE);
+				}
+
+				pos = articlesPos[id - 2];
+
+				if (articles[id - 1]->getType() == 'r' || articles[id - 1]->getType() == 'R') {
+					tempRim.fromFile(readArticle, &pos);
+				}
+				if (articles[id - 1]->getType() == 't' || articles[id - 1]->getType() == 'T') {
+					tempTire.fromFile(readArticle, &pos);
+				}
+				pos = articlesPos[id - 2];
+
+				while (!(change == 'e' || change == 'E')) {
+					
+
+					cout << articles[id - 1]->toString() << endl
+						<< "What do you wish to change about the article, the manufacturer (m), stock ammount (s), the diameter (d), the price (p), ";
+					if (articles[id - 1]->getType() == 'r' || articles[id - 1]->getType() == 'R') {
+						cout << "the aluminum (a), the color (c), the width (w), ";
+					}
+					if (articles[id - 1]->getType() == 't' || articles[id - 1]->getType() == 'T') {
+						cout << "the width (w), the height (h), the speed index (i), the season (a), ";
+					}
+
+					cout << "or to exit the loop (e): ";
+					cin >> change;
+
+					if (change == 'm' || change == 'M') {
+						cout << "Please enter the new name of the manufacturer: ";
+						cin >> manufacturer;
+						if (articles[id - 1]->getType() == 'r' || articles[id - 1]->getType() == 'R') {
+							tempRim.setManufacturer(manufacturer);
+						}
+						else {
+							tempTire.setManufacturer(manufacturer);
+						}
+					}
+
+					if (change == 's' || change == 'S') {
+						oristock = articles[id - 1]->getStock();
+						updatestock(articleFile, articles, articlesPos, id, 0);
+						if (articles[id - 1]->getType() == 'r' || articles[id - 1]->getType() == 'R') {
+							tempRim.setStock(articles[id - 1]->getStock());
+						}
+						else {
+							tempTire.setStock(articles[id - 1]->getStock());
+						}
+						articles[id - 1]->setStock(oristock);
+					}
+
+					if (change == 'd' || change == 'D') {
+						cout << "Please enter the new diameter: ";
+						cin >> dia;
+						while (dia <= 0) {
+							cout << "The diameter must be larger than 0";
+							cin >> dia;
+						}
+						if (articles[id - 1]->getType() == 'r' || articles[id - 1]->getType() == 'R') {
+							tempRim.setDiameter(dia);
+						}
+						else {
+							tempTire.setDiameter(dia);
+						}
+					}
+
+					if (change == 'p' || change == 'P') {
+						cout << "Please enter the new price: ";
+						cin >> price;
+						while (price <= 0) {
+							cout << "The price must be larger than 0";
+							cin >> price;
+						}
+						if (articles[id - 1]->getType() == 'r' || articles[id - 1]->getType() == 'R') {
+							tempRim.setPrice(price);
+						}
+						else {
+							tempTire.setPrice(price);
+						}
+					}
+
+					if ((change == 'a' || change == 'A') && (articles[id - 1]->getType() == 'r' || articles[id - 1]->getType() == 'R')) {
+						cout << "Is the rim made of aluminum (1) or not (0): ";
+						cin >> alu;
+						while (!(alu == 0 || alu == 1)) {
+							cout << "Enter either a 0 (not aluminum) or 1 (aluminum): ";
+							cin >> alu;
+						}
+						if (alu == 0) {
+							aluminum = false;
+						}
+						else {
+							aluminum = true;
+						}
+						tempRim.setAluminum(aluminum);
+					}
+
+					if ((change == 'c' || change == 'C') && (articles[id - 1]->getType() == 'r' || articles[id - 1]->getType() == 'R')) {
+						cout << "Enter the new color: ";
+						cin >> colorIndex;
+						tempRim.setColor(colorIndex);
+					}
+
+					if ((change == 'w' || change == 'W') && (articles[id - 1]->getType() == 'r' || articles[id - 1]->getType() == 'R')) {
+						cout << "Enter the new width: ";
+						cin >> width;
+						while (width <= 0) {
+							cout << "The width must be larger than 0: ";
+							cin >> width;
+						}
+						tempRim.setWidth(width);
+					}
+
+					if ((change == 'w' || change == 'W') && (articles[id - 1]->getType() == 't' || articles[id - 1]->getType() == 'T')) {
+						cout << "Enter the new width: ";
+						cin >> width;
+						while (width <= 0) {
+							cout << "The width must be larger than 0: ";
+							cin >> width;
+						}
+						tempTire.setWidth(width);
+					}
+
+					if ((change == 'h' || change == 'H') && (articles[id - 1]->getType() == 't' || articles[id - 1]->getType() == 'T')) {
+						cout << "Enter the new height: ";
+						cin >> height;
+						while (height <= 0) {
+							cout << "The height must be larger than 0: ";
+							cin >> height;
+						}
+						tempTire.setHeight(height);
+					}
+
+					if ((change == 'i' || change == 'I') && (articles[id - 1]->getType() == 't' || articles[id - 1]->getType() == 'T')) {
+						cout << "Enter the new speed index: ";
+						cin >> colorIndex;
+						tempTire.setSpeedIndex(colorIndex);
+					}
+
+					if ((change == 'a' || change == 'A') && (articles[id - 1]->getType() == 't' || articles[id - 1]->getType() == 'T')) {
+						cout << "Enter the new season: ";
+						cin >> season;
+						while (!(season == 's' || season == 'S' || season == 'w' || season == 'W')) {
+							cout << "The season must be either summer(s) or winter (w): ";
+							cin >> season;
+						}
+						tempTire.setSeason(season);
+					}
+				}
+
+				if (articles[id - 1]->getType() == 'r' || articles[id - 1]->getType() == 'R') {
+					cout << "The article would be changed from:" << endl
+						<< articles[id - 1]->toString() << endl << "to" << endl << tempRim.toString();
+				}
+				if (articles[id - 1]->getType() == 't' || articles[id - 1]->getType() == 'T') {
+					cout << "The article would be changed from:" << endl
+						<< articles[id - 1]->toString() << endl << "to" << endl << tempTire.toString() << endl;
+				}
+
+				cout << "Do you wish to save your changes (y/n): ";
+				cin >> yes;
+				while (!(yes == 'y' || yes == 'Y' || yes == 'n' || yes == 'N')) {
+					cout << "Enter a valid choice, y or n: ";
+					cin >> yes;
+				}
+
+				if (yes == 'y' || yes == 'Y') {
+					if (articles[id - 1]->getType() == 'r' || articles[id - 1]->getType() == 'R') {
+						tempRim.toFile(writeArticle, &pos);
+					}
+					if (articles[id - 1]->getType() == 't' || articles[id - 1]->getType() == 'T') {
+						tempTire.toFile(writeArticle, &pos);
+					}
+					readarticles(articleFile, articles, articlesPos);
+				}
 			}
 		}
 	}
@@ -682,43 +882,196 @@ void changearticle(const static string& articleFile, vector<Article*> articles, 
 
 void readcustomers(const static string& customerFile, vector<Customer*> customers, vector<int> customersPos) {
 	ifstream inCustomer(customerFile, ios::in | ios::binary);
-	Customer* customer;
-	int* customerPos = 0;
+	Customer checkCustomer{ "", "", '\0' };
+	Company tempCompany{ "", "", '\0', "", NULL };
+	int tempPos, customerPos = 0;
 	customers.clear();
 
 	if (!inCustomer) {
-		cerr << "The cusomer file could not be opened." << endl;
+		cerr << "The customer file could not be opened." << endl;
 		exit(EXIT_FAILURE);
 	}
 
-	//checkCustomer->fromFile(inCustomer, customerPos);
+	tempPos = customerPos;
+	checkCustomer.fromFile(inCustomer, &customerPos);
 
-	while (inCustomer.peek() != EOF) {
-		/*if (checkCustomer.getType() == 'o' || checkCustomer.getType() == 'O') {
-			*customerPos = tempPos;
-			tempCompany.fromFile(inCustomer, customerPos);
+	while (checkCustomer.getType() != '\0') {
+		if (checkCustomer.getType() == 'o' || checkCustomer.getType() == 'O') {
+			customerPos = tempPos;
+			tempCompany.fromFile(inCustomer, &customerPos);
 			customers.push_back(new Company(tempCompany));
 		}
 		else {
 			customers.push_back(new Customer(checkCustomer));
-		}*/
-		customer->fromFile(inCustomer, customerPos);
-		customersPos.push_back(*customerPos);
-		customers.push_back(customer);
+		}
+		customersPos.push_back(customerPos);
+
+		tempPos = customerPos;
+		checkCustomer.setType('\0');
+		checkCustomer.fromFile(inCustomer, &customerPos);
 	}
 }
 
 void searchcustomer(vector<Customer*> customers)
 {
-	;
+	char filter, choice = 'l';
+	string search;
+	int i;
+	ostringstream stream;
+
+	while (!(choice == 'e' || choice == 'E'))
+	{
+		cout << "Do you wish to do a normal search (n), do a filtered search (f) or exit (e)?" << std::endl;
+		cin >> choice;
+		if (choice == 'n' || choice == 'N')
+		{
+			cout << "Do you wish to look at all of the items (all), or look for a specific object (just type what you are looking for)?" << std::endl;
+			getline(cin, search);
+			if (search.compare("all") == 0 || search.compare("All") == 0)
+			{
+				stream << "ID" << setw(3) << "Name" << setw(NAME) << "Address" << setw(ADDRESS) << "Type" << setw(10) << "VAT" << setw(VATNUM) << "Volume Discount" << endl;
+				for (i = 0; i < customers.size(); i++) {
+					stream << (i + 1) << setw(3) << customers[i]->toTable() << endl;
+				}
+				cout << stream.str();
+			}
+			else
+			{
+				stream << "ID" << setw(3) << "Name" << setw(NAME) << "Address" << setw(ADDRESS) << "Type" << setw(10) << "VAT" << setw(VATNUM) << "Volume Discount" << endl;
+				for (i = 0; i < customers.size(); i++) {
+					if (isSubstring(search, customers[i]->getName())) {
+						stream << (i + 1) << setw(3) << customers[i]->toTable() << endl;
+					}
+				}
+				cout << stream.str();
+			}
+		}
+
+		if (choice == 'f' || choice == 'F')
+		{
+			cout << "Do you wish to look at only customers (u), or only companies (o): ";
+			cin >> filter;
+			while (!(filter == 'u' || filter == 'U' || filter == 'o' || filter == 'O')) {
+				cout << "Enter a valid choice (o/u): ";
+				cin >> filter;
+			}
+			if (filter == 'u' || filter == 'U')
+			{
+				cout << "Do you wish to look at all of the customers (all), or look for a specific object (just type what you are looking for)?" << std::endl;
+				getline(cin, search);
+				if (search.compare("all") == 0 || search.compare("All") == 0)
+				{
+					stream << "ID" << setw(3) << "Name" << setw(NAME) << "Address" << setw(ADDRESS) << "Type" << setw(10) << "VAT" << setw(VATNUM) << "Volume Discount" << endl;
+					for (i = 0; i < customers.size(); i++) {
+						if (customers[i]->getType() == 'u' || customers[i]->getType() == 'U') {
+							stream << (i + 1) << setw(3) << customers[i]->toTable() << endl;
+						}
+					}
+					cout << stream.str();
+				}
+				else
+				{
+					stream << "ID" << setw(3) << "Name" << setw(NAME) << "Address" << setw(ADDRESS) << "Type" << setw(10) << "VAT" << setw(VATNUM) << "Volume Discount" << endl;
+					for (i = 0; i < customers.size(); i++) {
+						if ((customers[i]->getType() == 'u' || customers[i]->getType() == 'U') && isSubstring(search, customers[i]->getName())) {
+							stream << (i + 1) << setw(3) << customers[i]->toTable() << endl;
+						}
+					}
+					cout << stream.str();
+				}
+			}
+
+			if (filter == 'o' || filter == 'O')
+			{
+				cout << "Do you wish to look at all of the items (all), or look for a specific object (just type what you are looking for)?" << std::endl;
+				getline(cin, search);
+				if (search.compare("all") == 0 || search.compare("All") == 0)
+				{
+					stream << "ID" << setw(3) << "Name" << setw(NAME) << "Address" << setw(ADDRESS) << "Type" << setw(10) << "VAT" << setw(VATNUM) << "Volume Discount" << endl;
+					for (i = 0; i < customers.size(); i++) {
+						if (customers[i]->getType() == 'o' || customers[i]->getType() == 'O') {
+							stream << (i + 1) << setw(3) << customers[i]->toTable() << endl;
+						}
+					}
+					cout << stream.str();
+				}
+				else
+				{
+					stream << "ID" << setw(3) << "Name" << setw(NAME) << "Address" << setw(ADDRESS) << "Type" << setw(10) << "VAT" << setw(VATNUM) << "Volume Discount" << endl;
+					for (i = 0; i < customers.size(); i++) {
+						if ((customers[i]->getType() == 'o' || customers[i]->getType() == 'O') && isSubstring(search, customers[i]->getName())) {
+							stream << (i + 1) << setw(3) << customers[i]->toTable() << endl;
+						}
+					}
+					cout << stream.str();
+				}
+			}
+		}
+	}
 }
 
-void addcustomer(vector<Customer*> customers)
+void addcustomer(const static string& customerFile, vector<Customer*> customers, vector<int> customersPos)
 {
-	;
+	int i, discount, loc;
+	char type, choice = 'x';
+	string name, address, VAT;
+	ofstream outCustomer;
+	Customer* customer;
+	bool customerAdd;
+
+	while (!(choice == 'e' || choice == 'E')) {
+		customerAdd = false;
+		cout << "Do you wish to add a customer (u), company (o) or exit (e): ";
+		cin >> choice;
+
+		if (choice == 'u' || choice == 'U') {
+			cout << "Enter the name: ";
+			cin >> name;
+
+			cout << "Enter the address: ";
+			cin >> address;
+
+			customer = new Customer(name, address, 'u');
+			customerAdd = true;
+		}
+
+		if (choice == 'r' || choice == 'R')
+		{
+			cout << "Enter the name: ";
+			cin >> name;
+
+			cout << "Enter the address: ";
+			cin >> address;
+
+			cout << "Enter the VAT: ";
+			cin >> VAT;
+
+			cout << "Enter the volume discount: ";
+			cin >> discount;
+			while (discount < 0) {
+				cout << "The discount can't be negative. Enter a valid discount: ";
+				cin >> discount;
+			}
+
+			customer = new Company(name, address, 'o', VAT, discount);
+			customerAdd = true;
+		}
+
+		if (customerAdd) {
+			if (!outCustomer) {
+				cerr << "Something went wrong opening the customer file." << endl;
+				exit(EXIT_FAILURE);
+			}
+
+			loc = outCustomer.eof();
+			customer->toFile(outCustomer, &loc);
+
+			readcustomers(customerFile, customers, customersPos);
+		}
+	}
 }
 
-void deletecustomer(vector<Customer*> customers)
+void deletecustomer(const static string& customerFile, vector<Customer*> customers, vector<int> customersPos, const static string& deletedCustomerFile, vector<Customer*> deletedCustomers, vector<int> deletedCustomersPos)
 {
 	;
 }
@@ -730,17 +1083,23 @@ void changecustomer(vector<Customer*> customers)
 
 void readinvoices(const static string& invoiceFile, vector<Invoice*> invoices) {
 	ifstream inInvoice(invoiceFile, ios::in | ios::binary);
-	Invoice* invoice;
+	Customer customer{ "", "", '\0' };
+	Article article{ "", "", NULL, NULL, NULL, '\0' };
+	array<Article, ARTIEKELEN> articles = { article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article, article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article };
+	Invoice invoice{ customer, articles, NULL, NULL };
 	invoices.clear();
 
 	if (!inInvoice) {
-		cerr << "The cusomer file could not be opened." << endl;
+		cerr << "The invoice file could not be opened." << endl;
 		exit(EXIT_FAILURE);
 	}
 
-	while (inInvoice.peek() != EOF) {
-		invoice->fromFile(inInvoice);
-		invoices.push_back(invoice);
+	invoice.fromFile(inInvoice);
+
+	while (invoice.getPrice() != NULL) {
+		invoices.push_back(new Invoice(invoice));
+		invoice.setPrice(NULL);
+		invoice.fromFile(inInvoice);
 	}
 }
 
@@ -749,7 +1108,7 @@ void searchinvoice(vector<Invoice*> invoices)
 	;
 }
 
-void makeorder(vector<Invoice*> invoices)
+void makeorder(const static string& invoiceFile, vector<Invoice*> invoices, const static string& articleFile, vector<Article*> articles, vector<int> articlesPos, const static string& customerFile, vector<Customer*> customers, vector<int> customersPos, const static string& tireCenterFile, vector<TireCenter*> tireCenters, int id)
 {
 	;
 }
@@ -758,17 +1117,24 @@ void changeinvoice(vector<Invoice*>);
 
 void readtirecenters(const static string& tireCenterFile, vector<TireCenter*> tireCenters) {
 	ifstream inTireCenter(tireCenterFile, ios::in | ios::binary);
-	TireCenter* tireCenter;
+	Article article{ "", "", NULL, NULL, NULL, '\0' };
+	array<Article, ARTIEKELEN> articles = { article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article, article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article };
+	Customer customer{ "", "", '\0' };
+	array<Customer, CUSTOMERS> customers = { customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer };
+	TireCenter tireCenter{ "", "", articles, customers};
 	tireCenters.clear();
 
 	if (!inTireCenter) {
-		cerr << "The cusomer file could not be opened." << endl;
+		cerr << "The tire center file could not be opened." << endl;
 		exit(EXIT_FAILURE);
 	}
 
-	while (inTireCenter.peek() != EOF) {
-		tireCenter->fromFile(inTireCenter);
-		tireCenters.push_back(tireCenter);
+	tireCenter.fromFile(inTireCenter);
+
+	while (!(tireCenter.getName().compare(""))) {
+		tireCenters.push_back(new TireCenter(tireCenter));
+		tireCenter.setName("");
+		tireCenter.fromFile(inTireCenter);
 	}
 }
 
@@ -800,16 +1166,98 @@ void searchtirecenter(vector<TireCenter*> tireCenters) {
 	}
 }
 
-void addtirecenter(vector<TireCenter*>);
-
-void updatestock(vector<Article*> articles)
-{
+void addtirecenter(const static string& tireCenterFile, vector<TireCenter*> tireCenters, vector<Article*> articles, vector<Customer*> customers) {
 	;
 }
 
-void update(vector<Article*> articles)
+void updatestock(const static string& articleFile, vector<Article*> articles, vector<int> articlesPos, int id, int ammount)
 {
-	;
+	int newID, newAmmount = 0;											//zodat automatisch update als ammount word mee gegeven
+	char achoice, choice = 'c';										//zodat het automatisch update als een id word mee gegeven
+	ofstream changeArticle(articleFile, ios::out | ios::binary);
+
+	while (!(choice == 'e' || choice == 'E')) {
+		if (id == 0) {
+			cout << "Do you wish to search for an article (s), change the stock (c), or exit (e): ";
+			cin >> choice;
+			if (choice == 'c' || choice == 'C') {
+				cout << "Give the id of the product you wish to change (enter 0 to exit): ";
+				cin >> newID;
+
+				while (newID < 0 || newID > articles.size()) {
+					cout << "Enter a valid ID (0 to exit): ";
+					cin >> newID;
+				}
+			}
+		}
+		else {
+			newID = id;
+		}
+
+		if (choice == 's' || choice == 'S') {
+			searcharticle(articles);
+		}
+
+		if (choice == 'c' || choice == 'C') {
+			if (ammount == 0) {
+				cout << "Do you wish to add an ammount (a), subtract an ammount (s) or just choose the ammount (c): ";
+				cin >> achoice;
+				while (!(achoice == 'a' || achoice == 'A' || achoice == 's' || achoice == 'S' || achoice == 'c' || achoice == 'C')) {
+					cout << "Please enter a valid choice, a, s, or c: ";
+					cin >> achoice;
+				}
+
+				if (achoice == 'a' || achoice == 'A') {
+					cout << "Enter the ammount you would like to add: ";
+					cin >> newAmmount;
+					while (-(newAmmount) > articles[id - 1]->getStock()) {
+						cout << "Stock can't become negative. Enter a valid number";
+						cin >> newAmmount;
+					}
+
+					newAmmount += articles[id - 1]->getStock();
+				}
+
+				if (achoice == 's' || achoice == 'S') {
+					cout << "Enter the ammount you would like to subtract: ";
+					cin >> newAmmount;
+					while (newAmmount > articles[id - 1]->getStock()) {
+						cout << "Stock can't become negative. Enter a valid number";
+						cin >> newAmmount;
+					}
+
+					newAmmount = articles[id - 1]->getStock() - newAmmount;
+				}
+
+				if (achoice == 'a' || achoice == 'A') {
+					cout << "Enter the ammount you would like to add: ";
+					cin >> newAmmount;
+					while (newAmmount < 0) {
+						cout << "Stock can't become negative. Enter a valid number";
+						cin >> newAmmount;
+					}
+				}
+			}
+			else {
+				newAmmount = ammount;
+			}
+
+			articles[id - 1]->setStock(newAmmount);
+			if (id == 0) {
+				if (!changeArticle) {
+					cerr << "An error occurred opening the article file." << endl;
+					exit(EXIT_FAILURE);
+				}
+
+				articles[id - 1]->toFile(changeArticle, &articlesPos[id - 2]);
+				readarticles(articleFile, articles, articlesPos);
+			}
+		}
+
+		if (id != 0) {
+			choice = 'e';
+		}
+	}
 }
 
 bool isSubstring(string s1, string s2)

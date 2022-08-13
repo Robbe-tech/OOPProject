@@ -31,7 +31,7 @@ public:
 	string toString() const;
 	string toTable() const;
 
-	void toFile(ofstream&);
+	void toFile(ofstream&, int);
 	void fromFile(ifstream&);
 private:
 	Customer customers;
