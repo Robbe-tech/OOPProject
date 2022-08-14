@@ -42,7 +42,7 @@ int Invoice::getDiscount() const {
 }
 
 float Invoice::calculateDiscount() {
-	float totdis = (100 - discount) * price / 100;
+	float totdis = ((100 - discount) * price) / 100;
 	return totdis;
 }
 float Invoice::calculatePrice() {
@@ -53,8 +53,8 @@ float Invoice::calculatePrice() {
 string Invoice::toString() const {
 	ostringstream stream;
 	int i = 0;
-	stream << "Customer:" << endl << customers.toString() << endl << endl << "Total Price: " << setw(20) << setprecision(2) << fixed << showpoint << getPrice() << endl << "Discount: " << setw(20) << setprecision(2) << fixed << showpoint << getDiscount() << endl << endl << "Articles:" << endl
-		<< "ID" << setw(3) << "Name" << setw(CHAR) << "Manufacturer" << setw(CHAR) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(10) << "Type" << endl;
+	stream << "Customer:" << endl << customers.toString() << endl << endl << "Total Price: " << setw(20) << setprecision(2) << fixed << showpoint << getPrice() << endl << "Discount: " << setw(20) << getDiscount() << "%" << endl
+		<< endl << "Articles:" << endl << "ID" << setw(3) << "Name" << setw(CHAR) << "Manufacturer" << setw(CHAR) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(10) << "Type" << endl;
 	while (articles[i].getType() != '\0' && i < ARTIEKELEN) {
 		stream << (i + 1) << setw(3) << articles[i].toTable() << endl;
 		i++;

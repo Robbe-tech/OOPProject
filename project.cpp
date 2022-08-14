@@ -21,15 +21,15 @@ using namespace std;
 
 void readarticles(const static string&, vector<Article*>, vector<int>);
 void searcharticle(vector<Article*>);
-void addarticle(const static string&,vector<Article*>, vector<int>);
+void addarticle(const static string&,vector<Article*>, vector<int>, const static string&, vector<TireCenter*>, int*);
 void deletearticle(const static string&, vector<Article*>, vector<int>,const static string&, vector<Article*>, vector<int>);
-void changearticle(const static string&, vector<Article*>, vector<int>);
+void changearticle(const static string&, vector<Article*>, vector<int>, const static string&, vector<TireCenter*>, int*);
 
 void readcustomers(const static string&, vector<Customer*>, vector<int>);
 void searchcustomer(vector<Customer*>);
-void addcustomer(const static string&, vector<Customer*>, vector<int>);
+void addcustomer(const static string&, vector<Customer*>, vector<int>, const static string&, vector<TireCenter*>, int*);
 void deletecustomer(const static string&, vector<Customer*>, vector<int>, const static string&, vector<Customer*>, vector<int>);
-void changecustomer(const static string&, vector<Customer*>, vector<int>);
+void changecustomer(const static string&, vector<Customer*>, vector<int>, const static string&, vector<TireCenter*>, int*);
 
 void readinvoices(const static string&, vector<Invoice*>);
 void searchinvoice(vector<Invoice*>);
@@ -45,7 +45,7 @@ inline bool fileTest(const static string&);
 
 int main(void) {
 	const static string articleFile = "Articles.dat", customerFile = "Customers.dat", invoiceFile = "Invoices.dat", tireCenterFile = "TireCenters.dat", deletedArticleFile = "DeletedArticles.dat", deletedCustomerFile = "DeletedCustomers.dat";
-	int i, id;
+	int i, id = 0;
 
 	vector<Article*> articles{};
 	vector<Article*> deletedArticles{};
@@ -72,37 +72,35 @@ int main(void) {
 	if (!fileTest(articleFile)) {
 		if (employee == 'o' || employee == 'O') {
 			cout << "We see that you are new here, we will create the files in wich you can add articles, customers, invoices and tire centers." << endl << "Lets start with adding some articles.";
-			addarticle(articleFile, articles, articlesPos);
+			addarticle(articleFile, articles, articlesPos, true, tireCenterFile, tireCenters, &id);
 			while (articles.empty()) {
 				cout << "Please add at least one article." << endl;
-				addarticle(articleFile, articles, articlesPos);
+				addarticle(articleFile, articles, articlesPos, true, tireCenterFile, tireCenters, &id);
 			}
 
 			cout << "Please add some customers." << endl;
-			addcustomer(customerFile, customers, customersPos);
+			addcustomer(customerFile, customers, customersPos, true, tireCenterFile, tireCenters, &id);
 			while (customers.empty()) {
 				cout << "Please add at least one customer." << endl;
-				addcustomer(customerFile, customers, customersPos);
+				addcustomer(customerFile, customers, customersPos, true, tireCenterFile, tireCenters, &id);
 			}
 
 			cout << "Please add some tire centers." << endl;
-			addtirecenter(tireCenterFile, tireCenters, articles, customers, false, 0, 0, 0);
+			addtirecenter(tireCenterFile, tireCenters, articles, customers, true, id, 0, 0);
 			while (tireCenters.empty()) {
 				cout << "Please add at least one tire center." << endl;
-				addtirecenter(tireCenterFile, tireCenters, articles, customers, false, 0, 0, 0);
+				addtirecenter(tireCenterFile, tireCenters, articles, customers, true, id, 0, 0);
 			}
 
-			cout << "Enter the ID of the tire center you are from (0 to exit, you cant make invoices without it): ";
+			cout << "Enter the ID of the tire center you are from: ";
 			cin >> id;
-			while (id < 0 || id > tireCenters.size()) {
-				cout << "Enter a valid ID (0 to exit): ";
+			while (id <= 0 || id > tireCenters.size()) {
+				cout << "Enter a valid ID: ";
 				cin >> id;
 			}
-
-			if (id != 0) {
-				cout << "If you want you could add some invoices." << endl;
-				makeorder(invoiceFile, invoices, articleFile, articles, articlesPos, customerFile, customers, customersPos, tireCenterFile, tireCenters, id);
-			}
+			
+			cout << "If you want you could add some invoices." << endl;
+			makeorder(invoiceFile, invoices, articleFile, articles, articlesPos, customerFile, customers, customersPos, tireCenterFile, tireCenters, id);
 
 			if (invoices.empty()) {
 				ofstream createInvoice(invoiceFile, ios::out | ios::binary);
@@ -121,7 +119,7 @@ int main(void) {
 			}
 
 			if (option == 'y' || option == 'Y') {
-				addcustomer(customerFile, customers, customersPos);
+				addcustomer(customerFile, customers, customersPos, true, tireCenterFile, tireCenters, &id);
 			}
 
 			ofstream createArticle(articleFile, ios::in | ios::binary);				//create files
@@ -160,20 +158,20 @@ int main(void) {
 				}
 				else {
 					cout << "Please add some articles." << endl;
-					addarticle(articleFile, articles, articlesPos);
+					addarticle(articleFile, articles, articlesPos, true, tireCenterFile, tireCenters, &id);
 					while (articles.empty()) {
 						cout << "Please add at least one article." << endl;
-						addarticle(articleFile, articles, articlesPos);
+						addarticle(articleFile, articles, articlesPos, true, tireCenterFile, tireCenters, &id);
 					}
 				}
 			}
 
 			if (customers.empty()) {
 				cout << "Please add some customers." << endl;
-				addcustomer(customerFile, customers, customersPos);
+				addcustomer(customerFile, customers, customersPos, true, tireCenterFile, tireCenters, &id);
 				while (customers.empty()) {
 					cout << "Please add at least one customer." << endl;
-					addcustomer(customerFile, customers, customersPos);
+					addcustomer(customerFile, customers, customersPos, true, tireCenterFile, tireCenters, &id);
 				}
 			}
 
@@ -183,10 +181,10 @@ int main(void) {
 				}
 				else {
 					cout << "Please add some tire centers." << endl;
-					addtirecenter(tireCenterFile, tireCenters, articles, customers, false, 0, 0, 0);
+					addtirecenter(tireCenterFile, tireCenters, articles, customers, true, id, 0, 0);
 					while (tireCenters.empty()) {
 						cout << "Please add at least one tire center." << endl;
-						addtirecenter(tireCenterFile, tireCenters, articles, customers, false, 0, 0, 0);
+						addtirecenter(tireCenterFile, tireCenters, articles, customers, true, id, 0, 0);
 					}
 				}
 			}
@@ -204,7 +202,7 @@ int main(void) {
 			if (checkcenter == 'n' || checkcenter == 'N') {
 				if (employee == 'o' || employee == 'O') {
 					cout << "Please add your tire center." << endl;
-					addtirecenter(tireCenterFile, tireCenters, articles, customers, false, 0, 0, 0);
+					addtirecenter(tireCenterFile, tireCenters, articles, customers, false, id, 0, 0);
 				}
 				else {
 					cout << "Please contact the owner." << endl;
@@ -212,7 +210,7 @@ int main(void) {
 			}
 
 			else {
-				cout << "Please choose the id of the tire center you are from (if you see multiple of your tire center choose the id of the last one): ";
+				cout << "Please choose the id of the tire center you are from (if you see multiple of your tire center choose the id of the first one): ";
 				cin >> id;
 
 				while (id > tireCenters.size() || id <= 0) {
@@ -239,7 +237,7 @@ int main(void) {
 					}
 					if ((option == 'a' || option == 'A') && (employee == 'o' || employee == 'O'))
 					{
-						addarticle(articleFile, articles, articlesPos);
+						addarticle(articleFile, articles, articlesPos, false, tireCenterFile, tireCenters, &id);
 					}
 					if ((option == 'd' || option == 'D') && (employee == 'o' || employee == 'O'))
 					{
@@ -247,7 +245,7 @@ int main(void) {
 					}
 					if (option == 'c' || option == 'C')
 					{
-						changearticle(articleFile, articles, articlesPos);
+						changearticle(articleFile, articles, articlesPos, tireCenterFile, tireCenters, &id);
 					}
 					if ((option == 'b' || option == 'B') && (employee == 'o' || employee == 'O'))
 					{
@@ -259,11 +257,11 @@ int main(void) {
 					}
 					if (option == 'h' || option == 'H')
 					{
-						changecustomer(customerFile, customers, customersPos);
+						changecustomer(customerFile, customers, customersPos, tireCenterFile, tireCenters, &id);
 					}
 					if (option == 'n' || option == 'N')
 					{
-						addcustomer(customerFile, customers, customersPos);
+						addcustomer(customerFile, customers, customersPos, false, tireCenterFile, tireCenters, &id);
 					}
 					if (option == 'i' || option == 'I')
 					{
@@ -441,13 +439,13 @@ void searcharticle(vector<Article*> articles)
 	}
 }
 
-void addarticle(const static string& articleFile, vector<Article*> articles, vector<int> articlesPos)
+void addarticle(const static string& articleFile, vector<Article*> articles, vector<int> articlesPos, bool first, const static string& tireCenterFile, vector<TireCenter*> tireCenters, int* tireCenterID)
 {
-	int i, stock, diameter, width, height, alu, loc;
+	int i, j, stock, diameter, width, height, alu, loc;
 	float price;
 	char choice = 's', season, type;
 	string name, manufacturer, colorspeed;
-	bool occured, aluminum, articleAdd;
+	bool occured, aluminum, articleAdd, done;
 	Article* article;
 	ofstream outArticle(articleFile, ios::out | ios::binary);
 
@@ -462,8 +460,8 @@ void addarticle(const static string& articleFile, vector<Article*> articles, vec
 				cout << "Enter the name: ";
 				getline(cin, name);
 				for (i = 0; i < articles.size(); i++) {
-					if (name.compare(articles[i]->getName()) == 0 && (articles[i]->getType() == 't' || articles[i]->getType() == 'T')) {
-						cout << "The name you entered is already used." << endl;
+					if (name.compare(articles[i]->getName()) == 0 || name.compare("") == 0) {
+						cout << "The name you entered is already used, or empty." << endl;
 						occured = true;
 					}
 				}
@@ -471,6 +469,10 @@ void addarticle(const static string& articleFile, vector<Article*> articles, vec
 
 			cout << "Enter the manufacturer: ";
 			getline(cin, manufacturer);
+			while (manufacturer.compare("") == 0) {
+				cout << "It can't be empty";
+				getline(cin, manufacturer);
+			}
 
 			cout << "Enter the stock: ";
 			cin >> stock;
@@ -533,8 +535,8 @@ void addarticle(const static string& articleFile, vector<Article*> articles, vec
 				cout << "Enter the name: ";
 				getline(cin, name);
 				for (i = 0; i < articles.size(); i++) {
-					if (name.compare(articles[i]->getName()) == 0 && (articles[i]->getType() == 't' || articles[i]->getType() == 'T')) {
-						cout << "The name you entered is already used." << endl;
+					if (name.compare(articles[i]->getName()) == 0 || name.compare("") == 0) {
+						cout << "The name you entered is already used, or empty." << endl;
 						occured = true;
 					}
 				}
@@ -542,6 +544,10 @@ void addarticle(const static string& articleFile, vector<Article*> articles, vec
 
 			cout << "Enter the manufacturer: ";
 			getline(cin, manufacturer);
+			while (manufacturer.compare("") == 0) {
+				cout << "It can't be empty";
+				getline(cin, manufacturer);
+			}
 
 			cout << "Enter the stock: ";
 			cin >> stock;
@@ -602,6 +608,76 @@ void addarticle(const static string& articleFile, vector<Article*> articles, vec
 			article->toFile(outArticle, &loc);
 
 			readarticles(articleFile, articles, articlesPos);
+		}
+
+		if (!first) {
+			cout << "Do you also wish to add this article to your tire center (y/n): ";
+			cin >> choice;
+			while (!(choice == 'y' || choice == 'Y' || choice == 'n' || choice == 'N')) {
+				cout << "Enter a valid choice: y, or n: ";
+				cin >> choice;
+			}
+
+			if (choice == 'y' || choice == 'Y') {
+				ofstream outTireCenter(tireCenterFile, ios::out | ios::binary);
+				i = 0;
+				done = false;
+				while (i < ARTIEKELEN || !done) {
+					if (tireCenters[*tireCenterID - 1]->getArticles()[i].getType() == '\0') {
+						tireCenters[*tireCenterID - 1]->getArticles()[i].setName(articles[articles.size() - 1]->getName());
+						tireCenters[*tireCenterID - 1]->getArticles()[i].setManufacturer(articles[articles.size() - 1]->getManufacturer());
+						tireCenters[*tireCenterID - 1]->getArticles()[i].setStock(articles[articles.size() - 1]->getStock());
+						tireCenters[*tireCenterID - 1]->getArticles()[i].setDiameter(articles[articles.size() - 1]->getDiameter());
+						tireCenters[*tireCenterID - 1]->getArticles()[i].setPrice(articles[articles.size() - 1]->getPrice());
+						tireCenters[*tireCenterID - 1]->getArticles()[i].setType(articles[articles.size() - 1]->getType());
+
+						if (!outTireCenter) {
+							cerr << "Something went wrong opening the tire center file" << endl;
+							exit(EXIT_FAILURE);
+						}
+
+						tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+						done = true;
+					}
+				}
+				
+				if (!done) {
+					i = 0;
+					done = false;
+					while (i < tireCenters.size() || !done) {
+						if (tireCenters[i]->getName().compare(tireCenters[*tireCenterID - 1]->getName()) == 0) {
+							j = 0;
+							while (j < ARTIEKELEN || !done) {
+								if (tireCenters[i]->getArticles()[j].getType() == '\0') {
+									*tireCenterID = i + 1;
+
+									tireCenters[*tireCenterID - 1]->getArticles()[i].setName(articles[articles.size() - 1]->getName());
+									tireCenters[*tireCenterID - 1]->getArticles()[i].setManufacturer(articles[articles.size() - 1]->getManufacturer());
+									tireCenters[*tireCenterID - 1]->getArticles()[i].setStock(articles[articles.size() - 1]->getStock());
+									tireCenters[*tireCenterID - 1]->getArticles()[i].setDiameter(articles[articles.size() - 1]->getDiameter());
+									tireCenters[*tireCenterID - 1]->getArticles()[i].setPrice(articles[articles.size() - 1]->getPrice());
+									tireCenters[*tireCenterID - 1]->getArticles()[i].setType(articles[articles.size() - 1]->getType());
+
+									if (!outTireCenter) {
+										cerr << "Something went wrong opening the tire center file" << endl;
+										exit(EXIT_FAILURE);
+									}
+
+									tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+									done = true;
+								}
+							}
+						}
+					}
+				}
+
+				if (!done) {
+					vector<Customer*> customers{};
+					addtirecenter(tireCenterFile, tireCenters, articles, customers, false, tireCenterID, articles.size(), 0);
+				}
+
+				readtirecenters(tireCenterFile, tireCenters);
+			}
 		}
 	}
 }
@@ -665,12 +741,12 @@ void deletearticle(const static string& articleFile, vector<Article*> articles, 
 	}
 }
 
-void changearticle(const static string& articleFile, vector<Article*> articles, vector<int> articlesPos)
+void changearticle(const static string& articleFile, vector<Article*> articles, vector<int> articlesPos, const static string& tireCenterFile, vector<TireCenter*> tireCenters, int* tireCenterID)
 {
-	char choice = 'l', change = 'b', yes, season;
-	int id, dia, alu, pos, oristock, width, height;
+	char choice = 'l', change = 'b', yes, season, tireCenter;
+	int i, j, id, dia, alu, pos, oristock, width, height;
 	float price;
-	bool aluminum;
+	bool aluminum, found, done;
 	string manufacturer, colorIndex;
 	Rim tempRim{ "", "", NULL, NULL, NULL, '\0', false, "", NULL };
 	Tire tempTire{ "", "", NULL, NULL, NULL, '\0', NULL, NULL, "", '\0' };
@@ -696,7 +772,7 @@ void changearticle(const static string& articleFile, vector<Article*> articles, 
 
 			if (id != 0) {
 				if (!readArticle) {
-					cerr << "A problem occured opening the file." << endl;
+					cerr << "A problem occured opening article the file." << endl;
 					exit(EXIT_FAILURE);
 				}
 
@@ -844,6 +920,130 @@ void changearticle(const static string& articleFile, vector<Article*> articles, 
 							cin >> season;
 						}
 						tempTire.setSeason(season);
+					}
+
+					if (change == 'm' || change == 'M' || change == 'd' || change == 'D' || change == 'p' || change == 'P') {
+						cout << "Do you wish to also change this within the tire center file (y, or n): ";
+						cin >> tireCenter;
+						while (!(tireCenter == 'y' || tireCenter == 'Y' || tireCenter == 'n' || tireCenter == 'N')) {
+							cout << "Enter a valid choice: y, or n: ";
+							cin >> tireCenter;
+						}
+
+						if (tireCenter == 'y' || tireCenter == 'Y') {
+							ofstream outTireCenter(tireCenterFile, ios::out | ios::binary);
+							i = 0;
+							found = false;
+							while (i < ARTIEKELEN || !found) {
+								if (tireCenters[*tireCenterID - 1]->getArticles()[i].getName().compare(articles[id - 1]->getName()) == 0) {
+									if (change == 'm' || change == 'M') {
+										tireCenters[*tireCenterID - 1]->getArticles()[i].setManufacturer(articles[id - 1]->getManufacturer());
+									}
+									if (change == 'd' || change == 'D') {
+										tireCenters[*tireCenterID - 1]->getArticles()[i].setDiameter(articles[id - 1]->getDiameter());
+									}
+									if (change == 'p' || change == 'P') {
+										tireCenters[*tireCenterID - 1]->getArticles()[i].setPrice(articles[id - 1]->getPrice());
+									}
+
+									if (!outTireCenter) {
+										cerr << "Something went wrong opening the tire center file" << endl;
+										exit(EXIT_FAILURE);
+									}
+
+									tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+									found = true;
+								}
+							}
+
+							if (!found) {
+								i = 0;
+								while (i < tireCenters.size() || !found) {
+									if (tireCenters[i]->getName().compare(tireCenters[*tireCenterID - 1]->getName()) == 0) {
+										j = 0;
+										while (j < ARTIEKELEN || !found) {
+											if (tireCenters[*tireCenterID - 1]->getArticles()[i].getName().compare(articles[id - 1]->getName()) == 0) {
+												if (change == 'm' || change == 'M') {
+													tireCenters[*tireCenterID - 1]->getArticles()[i].setManufacturer(articles[id - 1]->getManufacturer());
+												}
+												if (change == 'd' || change == 'D') {
+													tireCenters[*tireCenterID - 1]->getArticles()[i].setDiameter(articles[id - 1]->getDiameter());
+												}
+												if (change == 'p' || change == 'P') {
+													tireCenters[*tireCenterID - 1]->getArticles()[i].setPrice(articles[id - 1]->getPrice());
+												}
+
+												if (!outTireCenter) {
+													cerr << "Something went wrong opening the tire center file" << endl;
+													exit(EXIT_FAILURE);
+												}
+
+												tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+												done = true;
+											}
+										}
+									}
+								}
+							}
+
+							if (!found) {
+								i = 0;
+								done = false;
+								while (i < ARTIEKELEN || !done) {
+									if (tireCenters[*tireCenterID - 1]->getArticles()[i].getType() == '\0') {
+										tireCenters[*tireCenterID - 1]->getArticles()[i].setName(articles[id - 1]->getName());
+										tireCenters[*tireCenterID - 1]->getArticles()[i].setManufacturer(articles[id - 1]->getManufacturer());
+										tireCenters[*tireCenterID - 1]->getArticles()[i].setStock(articles[id - 1]->getStock());
+										tireCenters[*tireCenterID - 1]->getArticles()[i].setDiameter(articles[id - 1]->getDiameter());
+										tireCenters[*tireCenterID - 1]->getArticles()[i].setPrice(articles[id - 1]->getPrice());
+										tireCenters[*tireCenterID - 1]->getArticles()[i].setType(articles[id - 1]->getType());
+
+										if (!outTireCenter) {
+											cerr << "Something went wrong opening the tire center file" << endl;
+											exit(EXIT_FAILURE);
+										}
+
+										tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+										done = true;
+									}
+								}
+
+								if (!done) {
+									i = 0;
+									while (i < tireCenters.size() || !done) {
+										if (tireCenters[i]->getName().compare(tireCenters[*tireCenterID - 1]->getName()) == 0) {
+											j = 0;
+											while (j < ARTIEKELEN || !done) {
+												if (tireCenters[*tireCenterID - 1]->getArticles()[i].getType() == '\0') {
+													*tireCenterID = i + 1;
+													tireCenters[*tireCenterID - 1]->getArticles()[i].setName(articles[id - 1]->getName());
+													tireCenters[*tireCenterID - 1]->getArticles()[i].setManufacturer(articles[id - 1]->getManufacturer());
+													tireCenters[*tireCenterID - 1]->getArticles()[i].setStock(articles[id - 1]->getStock());
+													tireCenters[*tireCenterID - 1]->getArticles()[i].setDiameter(articles[id - 1]->getDiameter());
+													tireCenters[*tireCenterID - 1]->getArticles()[i].setPrice(articles[id - 1]->getPrice());
+													tireCenters[*tireCenterID - 1]->getArticles()[i].setType(articles[id - 1]->getType());
+
+													if (!outTireCenter) {
+														cerr << "Something went wrong opening the tire center file" << endl;
+														exit(EXIT_FAILURE);
+													}
+
+													tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+													done = true;
+												}
+											}
+										}
+									}
+								}
+
+								if (!done) {
+									vector<Customer*> customers{};
+									addtirecenter(tireCenterFile, tireCenters, articles, customers, false, tireCenterID, id, 0);
+								}
+							}
+
+							readtirecenters(tireCenterFile, tireCenters);
+						}
 					}
 				}
 
@@ -1007,14 +1207,14 @@ void searchcustomer(vector<Customer*> customers)
 	}
 }
 
-void addcustomer(const static string& customerFile, vector<Customer*> customers, vector<int> customersPos)
+void addcustomer(const static string& customerFile, vector<Customer*> customers, vector<int> customersPos, bool first, const static string& tireCenterFile, vector<TireCenter*> tireCenters, int* tireCenterID)
 {
-	int i, discount, loc;
+	int i, j, discount, loc;
 	char type, choice = 'x';
 	string name, address, VAT;
 	ofstream outCustomer;
 	Customer* customer;
-	bool customerAdd;
+	bool customerAdd, done;
 
 	while (!(choice == 'e' || choice == 'E')) {
 		customerAdd = false;
@@ -1064,6 +1264,70 @@ void addcustomer(const static string& customerFile, vector<Customer*> customers,
 			customer->toFile(outCustomer, &loc);
 
 			readcustomers(customerFile, customers, customersPos);
+		}
+
+		if (!first) {
+			cout << "Do you also wish to add this customer to your tire center (y/n): ";
+			cin >> choice;
+			while (!(choice == 'y' || choice == 'Y' || choice == 'n' || choice == 'N')) {
+				cout << "Enter a valid choice: y, or n: ";
+				cin >> choice;
+			}
+
+			if (choice == 'y' || choice == 'Y') {
+				ofstream outTireCenter(tireCenterFile, ios::out | ios::binary);
+				i = 0;
+				done = false;
+				while (i < KLANTEN || !done) {
+					if (tireCenters[*tireCenterID - 1]->getCustomers()[i].getType() == '\0') {
+						tireCenters[*tireCenterID - 1]->getCustomers()[i].setName(customers[customers.size() - 1]->getName());
+						tireCenters[*tireCenterID - 1]->getCustomers()[i].setAddress(customers[customers.size() - 1]->getAddress());
+						tireCenters[*tireCenterID - 1]->getCustomers()[i].setType(customers[customers.size() - 1]->getType());
+
+						if (!outTireCenter) {
+							cerr << "Something went wrong opening the tire center file" << endl;
+							exit(EXIT_FAILURE);
+						}
+
+						tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+						done = true;
+					}
+				}
+
+				if (!done) {
+					i = 0;
+					done = false;
+					while (i < tireCenters.size() || !done) {
+						if (tireCenters[i]->getName().compare(tireCenters[*tireCenterID - 1]->getName()) == 0) {
+							j = 0;
+							while (j < ARTIEKELEN || !done) {
+								if (tireCenters[i]->getArticles()[j].getType() == '\0') {
+									*tireCenterID = i + 1;
+
+									tireCenters[*tireCenterID - 1]->getCustomers()[i].setName(customers[customers.size() - 1]->getName());
+									tireCenters[*tireCenterID - 1]->getCustomers()[i].setAddress(customers[customers.size() - 1]->getAddress());
+									tireCenters[*tireCenterID - 1]->getCustomers()[i].setType(customers[customers.size() - 1]->getType());
+
+									if (!outTireCenter) {
+										cerr << "Something went wrong opening the tire center file" << endl;
+										exit(EXIT_FAILURE);
+									}
+
+									tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+									done = true;
+								}
+							}
+						}
+					}
+				}
+
+				if (!done) {
+					vector<Article*> articles{};
+					addtirecenter(tireCenterFile, tireCenters, articles, customers, false, tireCenterID, 0, customers.size());
+				}
+
+				readtirecenters(tireCenterFile, tireCenters);
+			}
 		}
 	}
 }
@@ -1127,11 +1391,12 @@ void deletecustomer(const static string& customerFile, vector<Customer*> custome
 	}
 }
 
-void changecustomer(const static string& customerFile, vector<Customer*> customers, vector<int> customersPos)
+void changecustomer(const static string& customerFile, vector<Customer*> customers, vector<int> customersPos, const static string& tireCenterFile, vector<TireCenter*> tireCenters, int* tireCenterID)
 {
 	char choice = 'l', change = 'b', yes;
-	int id, pos, discount;
+	int i, j, id, pos, discount;
 	float price;
+	bool found, done, tireCenter;
 	string address, VAT;
 	Customer tempCustomer{ "", "", '\0' };
 	Company tempCompany{ "", "", '\0', "", NULL };
@@ -1234,6 +1499,108 @@ void changecustomer(const static string& customerFile, vector<Customer*> custome
 						tempCompany.toFile(writeCustomer, &pos);
 					}
 					readcustomers(customerFile, customers, customersPos);
+
+					if (change == 'a' || change == 'A') {
+						cout << "Do you wish to also change this within the tire center file (y, or n): ";
+						cin >> tireCenter;
+						while (!(tireCenter == 'y' || tireCenter == 'Y' || tireCenter == 'n' || tireCenter == 'N')) {
+							cout << "Enter a valid choice: y, or n: ";
+							cin >> tireCenter;
+						}
+
+						if (tireCenter == 'y' || tireCenter == 'Y') {
+							ofstream outTireCenter(tireCenterFile, ios::out | ios::binary);
+							i = 0;
+							found = false;
+							while (i < KLANTEN || !found) {
+								if (tireCenters[*tireCenterID - 1]->getCustomers()[i].getName().compare(customers[id - 1]->getName()) == 0) {
+									tireCenters[*tireCenterID - 1]->getCustomers()[i].setAddress(customers[id - 1]->getAddress());
+
+									if (!outTireCenter) {
+										cerr << "Something went wrong opening the tire center file" << endl;
+										exit(EXIT_FAILURE);
+									}
+
+									tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+									found = true;
+								}
+							}
+
+							if (!found) {
+								i = 0;
+								while (i < tireCenters.size() || !found) {
+									if (tireCenters[i]->getName().compare(tireCenters[*tireCenterID - 1]->getName()) == 0) {
+										j = 0;
+										while (j < KLANTEN || !found) {
+											if (tireCenters[*tireCenterID - 1]->getCustomers()[i].getName().compare(customers[id - 1]->getName()) == 0) {
+												tireCenters[*tireCenterID - 1]->getCustomers()[i].setAddress(customers[id - 1]->getAddress());
+
+												if (!outTireCenter) {
+													cerr << "Something went wrong opening the tire center file" << endl;
+													exit(EXIT_FAILURE);
+												}
+
+												tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+												done = true;
+											}
+										}
+									}
+								}
+							}
+
+							if (!found) {
+								i = 0;
+								done = false;
+								while (i < KLANTEN || !done) {
+									if (tireCenters[*tireCenterID - 1]->getCustomers()[i].getType() == '\0') {
+										tireCenters[*tireCenterID - 1]->getCustomers()[i].setName(customers[id - 1]->getName());
+										tireCenters[*tireCenterID - 1]->getCustomers()[i].setAddress(customers[id - 1]->getAddress());
+										tireCenters[*tireCenterID - 1]->getCustomers()[i].setType(customers[id - 1]->getType());
+
+										if (!outTireCenter) {
+											cerr << "Something went wrong opening the tire center file" << endl;
+											exit(EXIT_FAILURE);
+										}
+
+										tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+										done = true;
+									}
+								}
+
+								if (!done) {
+									i = 0;
+									while (i < tireCenters.size() || !done) {
+										if (tireCenters[i]->getName().compare(tireCenters[*tireCenterID - 1]->getName()) == 0) {
+											j = 0;
+											while (j < KLANTEN || !done) {
+												if (tireCenters[*tireCenterID - 1]->getCustomers()[i].getType() == '\0') {
+													*tireCenterID = i + 1;
+													tireCenters[*tireCenterID - 1]->getCustomers()[i].setName(customers[id - 1]->getName());
+													tireCenters[*tireCenterID - 1]->getCustomers()[i].setAddress(customers[id - 1]->getAddress());
+													tireCenters[*tireCenterID - 1]->getCustomers()[i].setType(customers[id - 1]->getType());
+
+													if (!outTireCenter) {
+														cerr << "Something went wrong opening the tire center file" << endl;
+														exit(EXIT_FAILURE);
+													}
+
+													tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+													done = true;
+												}
+											}
+										}
+									}
+								}
+
+								if (!done) {
+									vector<Article*> articles{};
+									addtirecenter(tireCenterFile, tireCenters, articles, customers, false, tireCenterID, 0, id);
+								}
+							}
+
+							readtirecenters(tireCenterFile, tireCenters);
+						}
+					}
 				}
 			}
 		}
@@ -1519,10 +1886,139 @@ void searchinvoice(vector<Invoice*> invoices)
 
 void makeorder(const static string& invoiceFile, vector<Invoice*> invoices, const static string& articleFile, vector<Article*> articles, vector<int> articlesPos, const static string& customerFile, vector<Customer*> customers, vector<int> customersPos, const static string& tireCenterFile, vector<TireCenter*> tireCenters, int id)
 {
-	;
-}
+	int i, customerid, articleid, set, stock, customerpos, discount = 0, totalstock = 0, totalprice = 0;
+	char choice = 'b', filter = 'b', add;
+	Customer customer{ "", "", '\0' };
+	Company company{ "", "", '\0', "", NULL };
+	vector<Article*> addArticles{};
+	Article article{ "", "", NULL, NULL, NULL, '\0' };
+	array<Article, ARTIEKELEN> artiekelen = { article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article, article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article };
+	ifstream inCompany(customerFile, ios::in | ios::binary);
+	ofstream outInvoice(invoiceFile, ios::out | ios::binary);
 
-void changeinvoice(vector<Invoice*>);
+	while (!(choice == 'e' || choice == 'E')) {
+		cout << "Do you wish to add an order (a), search for a customer (s), or exit (e): ";
+		cin >> choice;
+		if (choice == 's' || choice == 'S') {
+			searchcustomer(customers);
+		}
+
+		if (choice == 'a' || choice == 'A') {
+			cout << "Enter the customers ID (0 to exit): ";
+			cin >> customerid;
+			while (customerid < 0 || customerid > customers.size()) {
+				cout << "Enter a valid choice (0 to exit): ";
+				cin >> customerid;
+			}
+
+			if (customerid != 0) {
+				while ((!(filter == 'e' || filter == 'E')) || addArticles.size() == 0) {
+					cout << "Do you wish to search for an article (s), add an article (a), or exit (e) (you can't exit while no articles are added): ";
+					cin >> filter;
+
+					if (filter == 's' || filter == 'S') {
+						searcharticle(articles);
+					}
+
+					if ((filter == 'e' || filter == 'E') && addArticles.size() == 0) {
+						cout << "Add at least one article." << endl;
+					}
+
+					if (filter == 'a' || filter == 'A') {
+						while (articleid != 0) {
+							cout << "Enter the id of article you would like to add (0 to exit loop): ";
+							cin >> articleid;
+
+							if (articleid != 0) {
+								if (articles[articleid - 1]->getType() == 'r' || articles[articleid - 1]->getType() == 'R') {
+									cout << "Enter the ammount of sets (sets are 4 rims each) you would like to buy: ";
+									cin >> stock;
+									set = 4;
+								}
+								else {
+									cout << "Enter the size of the set (1, 2, or 4): ";
+									cin >> set;
+									while (!(set == 1 || set == 2 || set == 4)) {
+										cout << "Enter a valid set ammount (1, 2, or 4): ";
+										cin >> set;
+									}
+
+									cout << "Enter the ammount of sets you would like to add: ";
+									cin >> stock;
+								}
+
+								addArticles.push_back(new Article(articles[articleid - 1]->getName(), articles[articleid - 1]->getManufacturer(), (stock * set), articles[articleid - 1]->getDiameter(), articles[articleid - 1]->getPrice(), articles[articleid - 1]->getType()));
+								totalstock += stock;
+							}
+						}
+					}
+				}
+			}
+			cout << "Customer:" << endl << customers[customerid - 1]->toString() << endl << endl << "Articles:" << endl
+				<< "Name" << setw(CHAR) << "Manufacturer" << setw(CHAR) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(10) << "Type" << endl;
+
+			for (i = 0; i < addArticles.size(); i++) {
+				cout << addArticles[i]->toTable() << endl;
+				totalprice += (addArticles[i]->getPrice() * addArticles[i]->getStock());
+			}
+
+			cout << "Total price: " << setw(20) << totalprice;
+			if (totalstock <= 10 && (customers[customerid - 1]->getType() == 'o' || customers[customerid - 1]->getType() == 'O')) {
+				customerpos = customersPos[customerid - 2];
+
+				if (!inCompany){
+					cerr << "An error occured opening the customer file." << endl;
+					exit(EXIT_FAILURE);
+				}
+
+				company.fromFile(inCompany, &customerpos);
+				discount = company.getVolumeDiscount();
+			}
+
+			cout << "Discount: " << setw(20) << discount << "%" << endl << endl << "Do you wish to save this invoice: y, or n: ";
+			cin >> add;
+			while (!(add == 'y' || add == 'Y' || add == 'n' || add == 'N')) {
+				cout << "Enter a valid choice: y, or n: ";
+				cin >> add;
+			}
+
+			if (add == 'y' || add == 'Y') {
+				customer.setName(customers[customerid - 1]->getName());
+				customer.setAddress(customers[customerid - 1]->getAddress());
+				customer.setType(customers[customerid - 1]->getType());
+				for (i = 0; i < addArticles.size(); i++) {
+					artiekelen[i % ARTIEKELEN].setName(articles[i]->getName());
+					artiekelen[i % ARTIEKELEN].setManufacturer(articles[i]->getManufacturer());
+					artiekelen[i % ARTIEKELEN].setStock(articles[i]->getStock());
+					artiekelen[i % ARTIEKELEN].setDiameter(articles[i]->getDiameter());
+					artiekelen[i % ARTIEKELEN].setPrice(articles[i]->getPrice());
+					artiekelen[i % ARTIEKELEN].setType(articles[i]->getType());
+
+					if ((i % ARTIEKELEN) == (ARTIEKELEN - 1)) {
+						invoices.push_back(new Invoice(customer, artiekelen, totalprice, discount));
+
+						if (!outInvoice) {
+							cerr << "Something went wrong opening the tire center file";
+							exit(EXIT_FAILURE);
+						}
+
+						invoices[invoices.size() - 1]->toFile(outInvoice, outInvoice.eof());
+
+						artiekelen = { article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article };
+					}
+				}
+				invoices.push_back(new Invoice(customer, artiekelen, totalprice, discount));
+
+				if (!outInvoice) {
+					cerr << "Something went wrong opening the tire center file";
+					exit(EXIT_FAILURE);
+				}
+
+				invoices[invoices.size() - 1]->toFile(outInvoice, outInvoice.eof());
+			}
+		}
+	}
+}
 
 void readtirecenters(const static string& tireCenterFile, vector<TireCenter*> tireCenters) {
 	ifstream inTireCenter(tireCenterFile, ios::in | ios::binary);
@@ -1582,73 +2078,237 @@ void searchtirecenter(vector<TireCenter*> tireCenters) {
 
 void addtirecenter(const static string& tireCenterFile, vector<TireCenter*> tireCenters, vector<Article*> articles, vector<Customer*> customers, bool newTireCenter, int* tireCenterID, int articleID, int customerID) {
 	int i, j, n, id = 1;
-	char choice = 't';
+	char choice = 't', filter = 't';
 	bool free, occured;
 	string name, address;
 	Article article{ "", "", NULL, NULL, NULL, '\0' };
-	Article article{ "", "", NULL, NULL, NULL, '\0' };
-	array<Article, ARTIEKELEN> artiekelen = { article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article, article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article };
+	array<Article, ARTIEKELEN> artiekelen = { article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article };
 	Customer customer{ "", "", '\0' };
 	array<Customer, KLANTEN> klanten = { customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer };
 	ofstream outTireCenter(tireCenterFile, ios::out | ios::binary);
 
 	if (newTireCenter) {
-		do {
-			occured = false;
-			cout << "Enter the name: ";
-			getline(cin, name);
-			for (i = 0; i < tireCenters.size(); i++) {
-				if (name.compare(tireCenters[i]->getName()) == 0) {
-					cout << "The name you entered is already used." << endl;
-					occured = true;
+		while (!(filter == 'e' || filter == 'E')) {
+			cout << "Do you wish to add a tire center (a), search for a tire center (s), or exit (e): ";
+			cin >> filter;
+
+			if (filter == 'a' || filter == 'A') {
+				do {
+					occured = false;
+					cout << "Enter the name: ";
+					getline(cin, name);
+					for (i = 0; i < tireCenters.size(); i++) {
+						if (name.compare(tireCenters[i]->getName()) == 0 || name.compare("") == 0) {
+							cout << "The name you entered is already used, or empty." << endl;
+							occured = true;
+						}
+					}
+				} while (occured);
+
+				cout << "Enter the address: ";
+				getline(cin, address);
+				while (address.compare("") == 0) {
+					cout << "The address can't be empty: ";
+					getline(cin, address);
 				}
-			}
-		} while (occured);
 
-		cout << "Enter the address: ";
-		getline(cin, address);
-
-		while (!(choice == 'e' || choice == 'E')) {
-			cout << "Do you wish to add all (a) current articles, add articles by id (i), search for an article (s), or exit (e): ";
-			cin >> choice;
-
-			if (choice == 'a' || choice == 'A') {
-				;
-			}
-
-			if (choice == 'i' || choice == 'I') {
 				i = 0;
+				j = 1;
+				while (!(choice == 'e' || choice == 'E' || choice == 'a' || choice == 'A' || choice == 'i' || choice == 'I')) {
+					cout << "Do you wish to add all (a) current articles, add articles by id (i), search for an article (s), or exit (e after adding articles you will also exit): ";
+					cin >> choice;
 
-				while (id != 0) {
-					cout << "Enter the ID of the article you would like to add (0 to exit): ";
-					cin >> id;
-					while (id < 0 || id > articles.size()) {
-						cout << "The ID is invalid. Enter a valid ID (0 to exit): ";
-						cin >> id;
+					if (choice == 'a' || choice == 'A' || choice == 'i' || choice == 'I') {
+						if (choice == 'a' || choice == 'A') {
+							for (i = 0; i < articles.size(); i++) {
+								artiekelen[i % ARTIEKELEN].setName(articles[i]->getName());
+								artiekelen[i % ARTIEKELEN].setManufacturer(articles[i]->getManufacturer());
+								artiekelen[i % ARTIEKELEN].setStock(articles[i]->getStock());
+								artiekelen[i % ARTIEKELEN].setDiameter(articles[i]->getDiameter());
+								artiekelen[i % ARTIEKELEN].setPrice(articles[i]->getPrice());
+								artiekelen[i % ARTIEKELEN].setType(articles[i]->getType());
+
+								if ((i % ARTIEKELEN) == (ARTIEKELEN - 1)) {
+									tireCenters.push_back(new TireCenter(name, address, artiekelen, klanten));
+									*tireCenterID = tireCenters.size();
+
+									if (!outTireCenter) {
+										cerr << "Something went wrong opening the tire center file";
+										exit(EXIT_FAILURE);
+									}
+
+									outTireCenter.seekp(sizeof(TireCenter) * (*tireCenterID - 1));
+									tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+
+									artiekelen = { article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article };
+									j++;
+								}
+							}
+						}
+
+						if (choice == 'i' || choice == 'I') {
+							while (id != 0) {
+								cout << "Enter the ID of the article you would like to add (0 to exit): ";
+								cin >> id;
+								while (id < 0 || id > articles.size()) {
+									cout << "The ID is invalid. Enter a valid ID (0 to exit): ";
+									cin >> id;
+								}
+
+								if (id != 0) {
+									artiekelen[i].setName(articles[id - 1]->getName());
+									artiekelen[i].setManufacturer(articles[id - 1]->getManufacturer());
+									artiekelen[i].setStock(articles[id - 1]->getStock());
+									artiekelen[i].setDiameter(articles[id - 1]->getDiameter());
+									artiekelen[i].setPrice(articles[id - 1]->getPrice());
+									artiekelen[i].setType(articles[id - 1]->getType());
+
+									i++;
+									if (i >= ARTIEKELEN) {
+										tireCenters.push_back(new TireCenter(name, address, artiekelen, klanten));
+										*tireCenterID = tireCenters.size();
+
+										if (!outTireCenter) {
+											cerr << "Something went wrong opening the tire center file";
+											exit(EXIT_FAILURE);
+										}
+
+										outTireCenter.seekp(sizeof(TireCenter) * (*tireCenterID - 1));
+										tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+
+										artiekelen = { article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article };
+										i = 0;
+										j++;
+									}
+								}
+							}
+
+							tireCenters.push_back(new TireCenter(name, address, artiekelen, klanten));
+							*tireCenterID = tireCenters.size();
+							outTireCenter.seekp(sizeof(TireCenter) * (*tireCenterID - 1));
+							tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+							*tireCenterID = tireCenters.size() - j + 1;
+							artiekelen = { article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article };
+						}
+
+						if (choice == 's' || choice == 'S') {
+							searcharticle(articles);
+						}
+					}
+				}
+
+				choice = 'd';
+				i = 0;
+				n = 1;
+				while (!(choice == 'e' || choice == 'E' || choice == 'a' || choice == 'A' || choice == 'i' || choice == 'I')) {
+					cout << "Do you wish to add all (a) current customers, add customers by id (i), search for a customer (s), or exit (e after adding articles you will also exit): ";
+					cin >> choice;
+
+					if (choice == 'a' || choice == 'A' || choice == 'i' || choice == 'I') {
+						if (choice == 'a' || choice == 'A') {
+							for (i = 0; i < customers.size(); i++) {
+								klanten[i % KLANTEN].setName(customers[i]->getName());
+								klanten[i % KLANTEN].setAddress(customers[i]->getAddress());
+								klanten[i % KLANTEN].setType(customers[i]->getType());
+
+								if ((i % KLANTEN) == (KLANTEN - 1)) {
+									if (n > j) {
+										tireCenters.push_back(new TireCenter(name, address, artiekelen, klanten));
+										*tireCenterID = tireCenters.size();
+									}
+									else {
+										tireCenters[*tireCenterID - 1]->setCustomers(klanten);
+									}
+
+									if (!outTireCenter) {
+										cerr << "Something went wrong opening the tire center file";
+										exit(EXIT_FAILURE);
+									}
+
+									outTireCenter.seekp(sizeof(TireCenter) * (*tireCenterID - 1));
+									tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+
+									if (n <= j) {
+										*tireCenterID += 1;
+									}
+
+									klanten = { customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer };
+									n++;
+								}
+							}
+						}
+
+						if (choice == 'i' || choice == 'I') {
+							while (id != 0) {
+								cout << "Enter the ID of the article you would like to add (0 to exit): ";
+								cin >> id;
+								while (id < 0 || id > articles.size()) {
+									cout << "The ID is invalid. Enter a valid ID (0 to exit): ";
+									cin >> id;
+								}
+
+								if (id != 0) {
+									klanten[i].setName(customers[id - 1]->getName());
+									klanten[i].setAddress(customers[id - 1]->getAddress());
+									klanten[i].setType(customers[id - 1]->getType());
+
+									i++;
+									if (i >= ARTIEKELEN) {
+										if (n > j) {
+											tireCenters.push_back(new TireCenter(name, address, artiekelen, klanten));
+											*tireCenterID = tireCenters.size();
+										}
+										else {
+											tireCenters[*tireCenterID - 1]->setCustomers(klanten);
+										}
+
+										if (!outTireCenter) {
+											cerr << "Something went wrong opening the tire center file";
+											exit(EXIT_FAILURE);
+										}
+
+										outTireCenter.seekp(sizeof(TireCenter) * (*tireCenterID - 1));
+										tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+
+										if (n <= j) {
+											*tireCenterID += 1;
+										}
+
+										artiekelen = { article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article };
+										i = 0;
+										n++;
+									}
+								}
+							}
+						}
+						if (n > j) {
+							tireCenters.push_back(new TireCenter(name, address, artiekelen, klanten));
+							*tireCenterID = tireCenters.size();
+						}
+						else {
+							tireCenters[*tireCenterID - 1]->setCustomers(klanten);
+						}
+
+						outTireCenter.seekp(sizeof(TireCenter)* (*tireCenterID - 1));
+						tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
+
+						if (n > j) {												//zodat laatste tire center met iets ongevuld, id is
+							*tireCenterID = *tireCenterID - n + j;
+						}
+						else {
+							*tireCenterID += 1;
+						}
 					}
 
-					artiekelen[i].setName(articles[id - 1]->getName());
-					artiekelen[i].setManufacturer(articles[id - 1]->getManufacturer());
-					artiekelen[i].setStock(articles[id - 1]->getStock());
-					artiekelen[i].setDiameter(articles[id - 1]->getDiameter());
-					artiekelen[i].setPrice(articles[id - 1]->getPrice());
-					artiekelen[i].setType(articles[id - 1]->getType());
-
-					i++;
-					if (i >= ARTIEKELEN) {
-						;
+					if (choice == 's' || choice == 'S') {
+						searcharticle(articles);
 					}
 				}
 			}
 
-			if (choice == 's' || choice == 'S') {
-				searcharticle(articles);
+			if (filter == 's' || filter == 'S') {
+				searchtirecenter(tireCenters);
 			}
-		}
-
-		choice = 'd';
-		while (!(choice == 'e' || choice == 'E')) {
-
 		}
 	}
 	else{
@@ -1710,7 +2370,8 @@ void addtirecenter(const static string& tireCenterFile, vector<TireCenter*> tire
 				exit(EXIT_FAILURE);
 			}
 
-			outTireCenter.seekp(sizeof(TireCenter) * (*tireCenterID - 2));
+			outTireCenter.seekp(sizeof(TireCenter) * (*tireCenterID - 1));
+			tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
 		}
 
 		if (customerID != 0) {
@@ -1762,9 +2423,12 @@ void addtirecenter(const static string& tireCenterFile, vector<TireCenter*> tire
 				exit(EXIT_FAILURE);
 			}
 
-			outTireCenter.seekp(sizeof(TireCenter) * (*tireCenterID - 2));
+			outTireCenter.seekp(sizeof(TireCenter) * (*tireCenterID - 1));
+			tireCenters[*tireCenterID - 1]->toFile(outTireCenter);
 		}
 	}
+
+	readtirecenters(tireCenterFile, tireCenters);
 }
 
 void updatestock(const static string& articleFile, vector<Article*> articles, vector<int> articlesPos, int id, int ammount)
@@ -1846,7 +2510,7 @@ void updatestock(const static string& articleFile, vector<Article*> articles, ve
 					exit(EXIT_FAILURE);
 				}
 
-				articles[id - 1]->toFile(changeArticle, &articlesPos[id - 2]);
+				articles[id - 1]->toFile(changeArticle, &articlesPos[id - 1]);
 				readarticles(articleFile, articles, articlesPos);
 			}
 		}
