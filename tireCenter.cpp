@@ -48,19 +48,17 @@ array<Customer, KLANTEN> TireCenter::getCustomers() const {
 
 string TireCenter::toString() const {
 	ostringstream stream;
-	int id, i = 0;
-	stream << "Name: " << setw(20) << getName() << "\nAddress: " << setw(20) << getAddress() << "\nArticles:\n"
-		<< "ID" << setw(3) << "Name" << setw(CHAR) << "Manufacturer" << setw(CHAR) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(10) << "Type" << setw(5) << "Width" << setw(10) << "Height/Aluminum" << setw(20) << "Color/Season" << setw(20) << "SpeedIndex\n";
+	int i = 0;
+	stream << "Name: " << setw(20) << getName() << endl << "Address: " << setw(20) << getAddress() << endl << endl << "Articles:" << endl
+		<< "ID" << setw(3) << "Name" << setw(CHAR) << "Manufacturer" << setw(CHAR) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(10) << "Type" << endl;
 	while (articles[i].getType() != '\0' && i < ARTIEKELEN) {
-		id = i + 1;
-		stream << id << setw(3) << articles[i].toTable() << "\n";
+		stream << (i + 1) << setw(3) << articles[i].toTable() << endl;
 		i++;
 	}
 	i = 0;
-	stream << "\nCustomers\n" << "ID" << setw(3) << "Name" << setw(NAME) << "Address" << setw(ADDRESS) << "Type" << setw(10) << "VAT" << setw(VATNUM) << "VolumeDiscount\n";
+	stream << endl << "Customers:" << endl << "ID" << setw(3) << "Name" << setw(NAME) << "Address" << setw(ADDRESS) << "Type" << endl;
 	while (customers[i].getType() != '\0' && i < KLANTEN) {
-		id = i + 1;
-		stream << id << setw(3) << customers[i].toTable() << "\n";
+		stream << (i + 1) << setw(3) << customers[i].toTable() << endl;
 		i++;
 	}
 	return stream.str();

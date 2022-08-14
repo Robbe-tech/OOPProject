@@ -52,12 +52,11 @@ float Invoice::calculatePrice() {
 
 string Invoice::toString() const {
 	ostringstream stream;
-	int id, i = 0;
-	stream << customers.toString() << "\nTotal Price: " << setw(20) << getPrice() << "\nDiscount: " << setw(20) << getDiscount() << "\nArticles:\n"
-		<< "ID" << setw(3) << "Name" << setw(CHAR) << "Manufacturer" << setw(CHAR) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(10) << "Type" << setw(5) << "Width" << setw(10) << "Height/Aluminum" << setw(20) << "Color/Season" << setw(20) << "SpeedIndex\n";
+	int i = 0;
+	stream << "Customer:" << endl << customers.toString() << endl << endl << "Total Price: " << setw(20) << setprecision(2) << fixed << showpoint << getPrice() << endl << "Discount: " << setw(20) << setprecision(2) << fixed << showpoint << getDiscount() << endl << endl << "Articles:" << endl
+		<< "ID" << setw(3) << "Name" << setw(CHAR) << "Manufacturer" << setw(CHAR) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(10) << "Type" << endl;
 	while (articles[i].getType() != '\0' && i < ARTIEKELEN) {
-		id = i + 1;
-		stream << id << setw(3) << articles[i].toTable() << "\n";
+		stream << (i + 1) << setw(3) << articles[i].toTable() << endl;
 		i++;
 	}
 	return stream.str();
@@ -65,7 +64,7 @@ string Invoice::toString() const {
 
 string Invoice::toTable() const {
 	ostringstream stream;
-	stream << customers.getName() << setw(NAME) << articles[0].getName() << setw(CHAR) << getPrice() << getDiscount;
+	stream << customers.getName() << setw(NAME) << articles[0].getName() << setw(CHAR) << setprecision(2) << fixed << showpoint << getPrice() << setw(10) << setprecision(2) << fixed << showpoint << getDiscount();
 	return stream.str();
 }
 

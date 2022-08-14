@@ -45,7 +45,7 @@ string Customer::toString() const {
 	else
 		type = "Company";
 	ostringstream stream;
-	stream << "Name: " << setw(20) << getName() << "\nAddress: " << setw(20) << getAddress() << "\nType: " << setw(20) << type;
+	stream << "Name: " << setw(20) << getName() << endl << "Address: " << setw(20) << getAddress() << endl << "Type: " << setw(20) << type;
 	return stream.str();
 }
 

@@ -29,7 +29,7 @@ int Company::getVolumeDiscount() const {
 
 string Company::toString() const {
 	ostringstream stream;
-	stream << Customer::toString << "\nVAT: " << setw(20) << getVAT() << "\nVolume Discount: " << setw(20) << getVolumeDiscount();
+	stream << Customer::toString << endl << "VAT: " << setw(20) << getVAT() << endl << "Volume Discount: " << setw(20) << getVolumeDiscount();
 	return stream.str();
 }
 

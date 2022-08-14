@@ -67,9 +67,9 @@ string Article::toString() const {
 	else
 		type = "Tyre";
 	ostringstream stream;
-	stream << "Name: " << setw(20) << getName() << "\nManufacturer: " << setw(20) << getManufacturer()
-		<< "\nStock: " << setw(20) << getStock() << "\nDiameter: " << setw(20) << getDiameter()
-		<< "\nPrice: " << setw(20) << setprecision(2) << fixed << showpoint << getPrice() << "\nType: " << setw(20) << type;
+	stream << "Name: " << setw(20) << getName() << endl << "Manufacturer: " << setw(20) << getManufacturer() << endl
+		<< "Stock: " << setw(20) << getStock() << endl << "Diameter: " << setw(20) << getDiameter() << endl
+		<< "Price: " << setw(20) << setprecision(2) << fixed << showpoint << getPrice() << endl << "Type: " << setw(20) << type;
 	return stream.str();
 }
 
@@ -80,8 +80,8 @@ string Article::toTable() const {
 	else
 		type = "Tyre";
 	ostringstream stream;
-	stream << getName() << setw(CHAR) << getManufacturer() << setw(CHAR) << getStock()
-		<< setw(10) << getDiameter() << setw(10) << setprecision(2) << fixed << showpoint << getPrice() << setw(10) << type;
+	stream << getName() << setw(CHAR) << getManufacturer() << setw(CHAR) << getStock() << setw(10)
+		<< getDiameter() << setw(10) << setprecision(2) << fixed << showpoint << getPrice() << setw(10) << type;
 	return stream.str();
 }
 
