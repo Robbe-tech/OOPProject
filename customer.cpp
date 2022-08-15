@@ -60,13 +60,13 @@ string Customer::toTable() const {
 	return stream.str();
 }
 
-void Customer::toFile(ofstream& outFile, int* pos) {
+void Customer::toFile(ofstream& outFile, streamoff* pos) {
 	outFile.seekp(*pos);
 	outFile.write(reinterpret_cast<char*>(this), sizeof(Customer));
 	*pos = outFile.tellp();
 }
 
-void Customer::fromFile(ifstream& inFile, int* pos) {
+void Customer::fromFile(ifstream& inFile, streamoff* pos) {
 	inFile.seekg(*pos);
 	if (inFile.peek() != EOF)
 	{

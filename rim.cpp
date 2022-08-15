@@ -57,13 +57,13 @@ string Rim::toTable() const {
 	return stream.str();
 }
 
-void Rim::toFile(ofstream& outFile, int* pos) {
+void Rim::toFile(ofstream& outFile, streamoff* pos) {
 	outFile.seekp(*pos);
 	outFile.write(reinterpret_cast<char*>(this), sizeof(Rim));
 	*pos = outFile.tellp();
 }
 
-void Rim::fromFile(ifstream& inFile, int* pos) {
+void Rim::fromFile(ifstream& inFile, streamoff* pos) {
 	inFile.seekg(*pos);
 	if (inFile.peek() != EOF)
 	{

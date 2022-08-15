@@ -29,23 +29,23 @@ int Company::getVolumeDiscount() const {
 
 string Company::toString() const {
 	ostringstream stream;
-	stream << Customer::toString << endl << "VAT: " << setw(20) << getVAT() << endl << "Volume Discount: " << setw(20) << getVolumeDiscount();
+	stream << Customer::toString() << endl << "VAT: " << setw(20) << getVAT() << endl << "Volume Discount: " << setw(20) << getVolumeDiscount();
 	return stream.str();
 }
 
 string Company::toTable() const {
 	ostringstream stream;
-	stream << Customer::toTable << setw(10) << getVAT() << setw(VATNUM) << getAddress();
+	stream << Customer::toTable() << setw(10) << getVAT() << setw(VATNUM) << getAddress();
 	return stream.str();
 }
 
-void Company::toFile(ofstream& outFile, int* pos) {
+void Company::toFile(ofstream& outFile, streamoff* pos) {
 	outFile.seekp(*pos);
 	outFile.write(reinterpret_cast<char*>(this), sizeof(Company));
 	*pos = outFile.tellp();
 }
 
-void Company::fromFile(ifstream& inFile, int* pos) {
+void Company::fromFile(ifstream& inFile, streamoff* pos) {
 	inFile.seekg(*pos);
 	if (inFile.peek() != EOF)
 	{

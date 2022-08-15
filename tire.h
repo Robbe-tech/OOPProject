@@ -25,8 +25,8 @@ public:
 	virtual string toString() const override;
 	virtual string toTable() const override;
 
-	virtual void toFile(ofstream&, int*) override;
-	virtual void fromFile(ifstream&, int*) override;
+	virtual void toFile(ofstream&, streamoff*) override;
+	virtual void fromFile(ifstream&, streamoff*) override;
 private:
 	int width;
 	int height;

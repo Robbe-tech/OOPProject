@@ -9,43 +9,39 @@
 #include "Invoice.h"
 #include "TireCenter.h"
 
-#define TOTTIRE 50
-#define TOTRIMS 50
-#define CUSTOMERS 50
-#define COMPANIES 10
-#define INVOICES 50
-#define TIRECENTERS 5
-#define LEN 50
+#define _CRT_SECURE_NO_WARNINGS				//voor file test
 
 using namespace std;
 
-void readarticles(const static string&, vector<Article*>, vector<int>);
+void readarticles(const string&, vector<Article*>, vector<streamoff>);
 void searcharticle(vector<Article*>);
-void addarticle(const static string&,vector<Article*>, vector<int>, const static string&, vector<TireCenter*>, int*);
-void deletearticle(const static string&, vector<Article*>, vector<int>,const static string&, vector<Article*>, vector<int>);
-void changearticle(const static string&, vector<Article*>, vector<int>, const static string&, vector<TireCenter*>, int*);
+void addarticle(const string&, vector<Article*>, vector<streamoff>, bool, const string&, vector<TireCenter*>, size_t*);
+void deletearticle(const string&, vector<Article*>, vector<streamoff>, const string&, vector<Article*>, vector<streamoff>);
+void changearticle(const string&, vector<Article*>, vector<streamoff>, const string&, vector<TireCenter*>, size_t*);
 
-void readcustomers(const static string&, vector<Customer*>, vector<int>);
+void readcustomers(const string&, vector<Customer*>, vector<streamoff>);
 void searchcustomer(vector<Customer*>);
-void addcustomer(const static string&, vector<Customer*>, vector<int>, const static string&, vector<TireCenter*>, int*);
-void deletecustomer(const static string&, vector<Customer*>, vector<int>, const static string&, vector<Customer*>, vector<int>);
-void changecustomer(const static string&, vector<Customer*>, vector<int>, const static string&, vector<TireCenter*>, int*);
+void addcustomer(const string&, vector<Customer*>, vector<streamoff>, bool, const string&, vector<TireCenter*>, size_t*);
+void deletecustomer(const string&, vector<Customer*>, vector<streamoff>, const string&, vector<Customer*>, vector<streamoff>);
+void changecustomer(const string&, vector<Customer*>, vector<streamoff>, const string&, vector<TireCenter*>, size_t*);
 
-void readinvoices(const static string&, vector<Invoice*>);
+void readinvoices(const string&, vector<Invoice*>);
 void searchinvoice(vector<Invoice*>);
-void makeorder(const static string&, vector<Invoice*>, const static string&, vector<Article*>, vector<int>, const static string&, vector<Customer*>, vector<int>, const static string&, vector<TireCenter*>, int);
+void makeorder(const string&, vector<Invoice*>, const string&, vector<Article*>, vector<streamoff>, const string&, vector<Customer*>, vector<streamoff>);
 
-void readtirecenters(const static string&, vector<TireCenter*>);
+void readtirecenters(const string&, vector<TireCenter*>);
 void searchtirecenter(vector<TireCenter*>);
-void addtirecenter(const static string&, vector<TireCenter*>, vector<Article*>, vector<Customer*>, bool, int, int, int);
+void addtirecenter(const string&, vector<TireCenter*>, vector<Article*>, vector<Customer*>, bool, size_t*, size_t, size_t);
 
-void updatestock(const static string&, vector<Article*>, vector<int>, int, int);
+void updatestock(const string&, vector<Article*>, vector<streamoff>, size_t, int);
 bool isSubstring(string, string);
-inline bool fileTest(const static string&);
+inline bool fileTest(const string&);
 
 int main(void) {
 	const static string articleFile = "Articles.dat", customerFile = "Customers.dat", invoiceFile = "Invoices.dat", tireCenterFile = "TireCenters.dat", deletedArticleFile = "DeletedArticles.dat", deletedCustomerFile = "DeletedCustomers.dat";
-	int i, id = 0;
+	size_t id = 0;
+	size_t* idptr;
+	idptr = &id;
 
 	vector<Article*> articles{};
 	vector<Article*> deletedArticles{};
@@ -54,10 +50,10 @@ int main(void) {
 	vector<Invoice*> invoices{};
 	vector<TireCenter*> tireCenters{};
 
-	vector<int> articlesPos{};				//binaire positie van volgende product
-	vector<int> deletedArticlesPos{};
-	vector<int> customersPos{};
-	vector<int> deletedCustomersPos{};		//posities zijn niet nodig voor invoices en tirecenters omdat ze altijd dezelfde grootte hebben
+	vector<streamoff> articlesPos{};				//binaire positie van volgende product
+	vector<streamoff> deletedArticlesPos{};
+	vector<streamoff> customersPos{};
+	vector<streamoff> deletedCustomersPos{};		//posities zijn niet nodig voor invoices en tirecenters omdat ze altijd dezelfde grootte hebben
 
 	char employee, option = 'b', checkcenter;
 
@@ -72,24 +68,24 @@ int main(void) {
 	if (!fileTest(articleFile)) {
 		if (employee == 'o' || employee == 'O') {
 			cout << "We see that you are new here, we will create the files in wich you can add articles, customers, invoices and tire centers." << endl << "Lets start with adding some articles.";
-			addarticle(articleFile, articles, articlesPos, true, tireCenterFile, tireCenters, &id);
+			addarticle(articleFile, articles, articlesPos, true, tireCenterFile, tireCenters, idptr);
 			while (articles.empty()) {
 				cout << "Please add at least one article." << endl;
-				addarticle(articleFile, articles, articlesPos, true, tireCenterFile, tireCenters, &id);
+				addarticle(articleFile, articles, articlesPos, true, tireCenterFile, tireCenters, idptr);
 			}
 
 			cout << "Please add some customers." << endl;
-			addcustomer(customerFile, customers, customersPos, true, tireCenterFile, tireCenters, &id);
+			addcustomer(customerFile, customers, customersPos, true, tireCenterFile, tireCenters, idptr);
 			while (customers.empty()) {
 				cout << "Please add at least one customer." << endl;
-				addcustomer(customerFile, customers, customersPos, true, tireCenterFile, tireCenters, &id);
+				addcustomer(customerFile, customers, customersPos, true, tireCenterFile, tireCenters, idptr);
 			}
 
 			cout << "Please add some tire centers." << endl;
-			addtirecenter(tireCenterFile, tireCenters, articles, customers, true, id, 0, 0);
+			addtirecenter(tireCenterFile, tireCenters, articles, customers, true, idptr, 0, 0);
 			while (tireCenters.empty()) {
 				cout << "Please add at least one tire center." << endl;
-				addtirecenter(tireCenterFile, tireCenters, articles, customers, true, id, 0, 0);
+				addtirecenter(tireCenterFile, tireCenters, articles, customers, true, idptr, 0, 0);
 			}
 
 			cout << "Enter the ID of the tire center you are from: ";
@@ -100,7 +96,7 @@ int main(void) {
 			}
 			
 			cout << "If you want you could add some invoices." << endl;
-			makeorder(invoiceFile, invoices, articleFile, articles, articlesPos, customerFile, customers, customersPos, tireCenterFile, tireCenters, id);
+			makeorder(invoiceFile, invoices, articleFile, articles, articlesPos, customerFile, customers, customersPos);
 
 			if (invoices.empty()) {
 				ofstream createInvoice(invoiceFile, ios::out | ios::binary);
@@ -168,10 +164,10 @@ int main(void) {
 
 			if (customers.empty()) {
 				cout << "Please add some customers." << endl;
-				addcustomer(customerFile, customers, customersPos, true, tireCenterFile, tireCenters, &id);
+				addcustomer(customerFile, customers, customersPos, true, tireCenterFile, tireCenters, idptr);
 				while (customers.empty()) {
 					cout << "Please add at least one customer." << endl;
-					addcustomer(customerFile, customers, customersPos, true, tireCenterFile, tireCenters, &id);
+					addcustomer(customerFile, customers, customersPos, true, tireCenterFile, tireCenters, idptr);
 				}
 			}
 
@@ -181,10 +177,10 @@ int main(void) {
 				}
 				else {
 					cout << "Please add some tire centers." << endl;
-					addtirecenter(tireCenterFile, tireCenters, articles, customers, true, id, 0, 0);
+					addtirecenter(tireCenterFile, tireCenters, articles, customers, true, idptr, 0, 0);
 					while (tireCenters.empty()) {
 						cout << "Please add at least one tire center." << endl;
-						addtirecenter(tireCenterFile, tireCenters, articles, customers, true, id, 0, 0);
+						addtirecenter(tireCenterFile, tireCenters, articles, customers, true, idptr, 0, 0);
 					}
 				}
 			}
@@ -202,7 +198,7 @@ int main(void) {
 			if (checkcenter == 'n' || checkcenter == 'N') {
 				if (employee == 'o' || employee == 'O') {
 					cout << "Please add your tire center." << endl;
-					addtirecenter(tireCenterFile, tireCenters, articles, customers, false, id, 0, 0);
+					addtirecenter(tireCenterFile, tireCenters, articles, customers, false, idptr, 0, 0);
 				}
 				else {
 					cout << "Please contact the owner." << endl;
@@ -269,7 +265,7 @@ int main(void) {
 					}
 					if (option == 'p' || option == 'P')
 					{
-						makeorder(invoiceFile, invoices, articleFile, articles, articlesPos, customerFile, customers, customersPos, tireCenterFile, tireCenters, id);
+						makeorder(invoiceFile, invoices, articleFile, articles, articlesPos, customerFile, customers, customersPos);
 					}
 					if (option == 'u' || option == 'U')
 					{
@@ -283,9 +279,9 @@ int main(void) {
 	return 0;
 }
 
-void readarticles(const static string& articleFile, vector<Article*> articles, vector<int> articlesPos) {
+void readarticles(const string& articleFile, vector<Article*> articles, vector<streamoff> articlesPos) {
 	ifstream inArticle(articleFile, ios::in | ios::binary);
-	int articlePos = 0;
+	streamoff articlePos = 0;
 	Article checkArticleType{ "", "", NULL, NULL, NULL, '\0' };
 	Rim tempRim{"", "", NULL, NULL, NULL, '\0', false, "", NULL};
 	Tire tempTire{ "", "", NULL, NULL, NULL, '\0', NULL, NULL, "", '\0' };
@@ -318,7 +314,8 @@ void searcharticle(vector<Article*> articles)
 {
 	char filter, choice = 'l';
 	string search;
-	int size, i;
+	int size;
+	size_t i;
 	ostringstream stream;
 
 	while (!(choice == 'e' || choice == 'E'))
@@ -439,11 +436,13 @@ void searcharticle(vector<Article*> articles)
 	}
 }
 
-void addarticle(const static string& articleFile, vector<Article*> articles, vector<int> articlesPos, bool first, const static string& tireCenterFile, vector<TireCenter*> tireCenters, int* tireCenterID)
+void addarticle(const string& articleFile, vector<Article*> articles, vector<streamoff> articlesPos, bool first, const string& tireCenterFile, vector<TireCenter*> tireCenters, size_t* tireCenterID)
 {
-	int i, j, stock, diameter, width, height, alu, loc;
+	int stock, diameter, width, height, alu;
+	size_t i, j;
+	streamoff loc;
 	float price;
-	char choice = 's', season, type;
+	char choice = 's', season;						//choice is type
 	string name, manufacturer, colorspeed;
 	bool occured, aluminum, articleAdd, done;
 	Article* article;
@@ -682,10 +681,11 @@ void addarticle(const static string& articleFile, vector<Article*> articles, vec
 	}
 }
 
-void deletearticle(const static string& articleFile, vector<Article*> articles, vector<int> articlesPos, const static string& deletedArticleFile, vector<Article*> deletedArticles, vector<int> deletedArticlesPos)
+void deletearticle(const string& articleFile, vector<Article*> articles, vector<streamoff> articlesPos, const string& deletedArticleFile, vector<Article*> deletedArticles, vector<streamoff> deletedArticlesPos)
 {
 	char del, choice = 'l';
-	int i, id, loc;
+	size_t i, id;
+	streamoff loc;
 
 	ofstream outArticles(articleFile, ios::out | ios::binary);
 	ofstream outDeletedArticles(deletedArticleFile, ios::out | ios::binary);
@@ -741,10 +741,12 @@ void deletearticle(const static string& articleFile, vector<Article*> articles, 
 	}
 }
 
-void changearticle(const static string& articleFile, vector<Article*> articles, vector<int> articlesPos, const static string& tireCenterFile, vector<TireCenter*> tireCenters, int* tireCenterID)
+void changearticle(const string& articleFile, vector<Article*> articles, vector<streamoff> articlesPos, const string& tireCenterFile, vector<TireCenter*> tireCenters, size_t* tireCenterID)
 {
 	char choice = 'l', change = 'b', yes, season, tireCenter;
-	int i, j, id, dia, alu, pos, oristock, width, height;
+	int dia, alu, oristock, width, height;
+	size_t i, j, id;
+	streamoff pos;
 	float price;
 	bool aluminum, found, done;
 	string manufacturer, colorIndex;
@@ -1077,11 +1079,11 @@ void changearticle(const static string& articleFile, vector<Article*> articles, 
 	}
 }
 
-void readcustomers(const static string& customerFile, vector<Customer*> customers, vector<int> customersPos) {
+void readcustomers(const string& customerFile, vector<Customer*> customers, vector<streamoff> customersPos) {
 	ifstream inCustomer(customerFile, ios::in | ios::binary);
 	Customer checkCustomer{ "", "", '\0' };
 	Company tempCompany{ "", "", '\0', "", NULL };
-	int tempPos, customerPos = 0;
+	streamoff tempPos, customerPos = 0;
 	customers.clear();
 
 	if (!inCustomer) {
@@ -1113,7 +1115,7 @@ void searchcustomer(vector<Customer*> customers)
 {
 	char filter, choice = 'l';
 	string search;
-	int i;
+	size_t i;
 	ostringstream stream;
 
 	while (!(choice == 'e' || choice == 'E'))
@@ -1207,10 +1209,12 @@ void searchcustomer(vector<Customer*> customers)
 	}
 }
 
-void addcustomer(const static string& customerFile, vector<Customer*> customers, vector<int> customersPos, bool first, const static string& tireCenterFile, vector<TireCenter*> tireCenters, int* tireCenterID)
+void addcustomer(const string& customerFile, vector<Customer*> customers, vector<streamoff> customersPos, bool first, const string& tireCenterFile, vector<TireCenter*> tireCenters, size_t* tireCenterID)
 {
-	int i, j, discount, loc;
-	char type, choice = 'x';
+	int discount;
+	size_t i, j;
+	streamoff loc;
+	char choice = 'x';
 	string name, address, VAT;
 	ofstream outCustomer;
 	Customer* customer;
@@ -1332,11 +1336,11 @@ void addcustomer(const static string& customerFile, vector<Customer*> customers,
 	}
 }
 
-void deletecustomer(const static string& customerFile, vector<Customer*> customers, vector<int> customersPos, const static string& deletedCustomerFile, vector<Customer*> deletedCustomers, vector<int> deletedCustomersPos)
+void deletecustomer(const string& customerFile, vector<Customer*> customers, vector<streamoff> customersPos, const string& deletedCustomerFile, vector<Customer*> deletedCustomers, vector<streamoff> deletedCustomersPos)
 {
 	char del, choice = 'l';
-	int i, id, loc;
-
+	size_t i, id;
+	streamoff loc;
 	ofstream outCustomers(customerFile, ios::out | ios::binary);
 	ofstream outDeletedCustomers(deletedCustomerFile, ios::out | ios::binary);
 
@@ -1391,12 +1395,12 @@ void deletecustomer(const static string& customerFile, vector<Customer*> custome
 	}
 }
 
-void changecustomer(const static string& customerFile, vector<Customer*> customers, vector<int> customersPos, const static string& tireCenterFile, vector<TireCenter*> tireCenters, int* tireCenterID)
-{
-	char choice = 'l', change = 'b', yes;
-	int i, j, id, pos, discount;
-	float price;
-	bool found, done, tireCenter;
+void changecustomer(const string& customerFile, vector<Customer*> customers, vector<streamoff> customersPos, const string& tireCenterFile, vector<TireCenter*> tireCenters, size_t* tireCenterID) {
+	char choice = 'l', change = 'b', yes, tireCenter;
+	int discount;
+	size_t i, j, id;
+	streamoff pos;
+	bool found, done;
 	string address, VAT;
 	Customer tempCustomer{ "", "", '\0' };
 	Company tempCompany{ "", "", '\0', "", NULL };
@@ -1607,7 +1611,7 @@ void changecustomer(const static string& customerFile, vector<Customer*> custome
 	}
 }
 
-void readinvoices(const static string& invoiceFile, vector<Invoice*> invoices) {
+void readinvoices(const string& invoiceFile, vector<Invoice*> invoices) {
 	ifstream inInvoice(invoiceFile, ios::in | ios::binary);
 	Customer customer{ "", "", '\0' };
 	Article article{ "", "", NULL, NULL, NULL, '\0' };
@@ -1633,7 +1637,7 @@ void searchinvoice(vector<Invoice*> invoices)
 {
 	char filter, choice = 'l', article;
 	string search, type;
-	int i, j, n, m, id;
+	size_t i, j, n, m, id;
 	bool oldCustomer, oldArticle;
 	vector<Customer*> customer;
 	vector<Article*> articles;
@@ -1884,9 +1888,12 @@ void searchinvoice(vector<Invoice*> invoices)
 	}
 }
 
-void makeorder(const static string& invoiceFile, vector<Invoice*> invoices, const static string& articleFile, vector<Article*> articles, vector<int> articlesPos, const static string& customerFile, vector<Customer*> customers, vector<int> customersPos, const static string& tireCenterFile, vector<TireCenter*> tireCenters, int id)
+void makeorder(const string& invoiceFile, vector<Invoice*> invoices, const string& articleFile, vector<Article*> articles, vector<streamoff> articlesPos, const string& customerFile, vector<Customer*> customers, vector<streamoff> customersPos)
 {
-	int i, customerid, articleid, set, stock, customerpos, discount = 0, totalstock = 0, totalprice = 0;
+	int set, stock, discount = 0, totalstock = 0;
+	size_t i, customerid, articleid;
+	float totalprice = 0;
+	streamoff customerpos;
 	char choice = 'b', filter = 'b', add;
 	Customer customer{ "", "", '\0' };
 	Company company{ "", "", '\0', "", NULL };
@@ -2020,12 +2027,12 @@ void makeorder(const static string& invoiceFile, vector<Invoice*> invoices, cons
 	}
 }
 
-void readtirecenters(const static string& tireCenterFile, vector<TireCenter*> tireCenters) {
+void readtirecenters(const string& tireCenterFile, vector<TireCenter*> tireCenters) {
 	ifstream inTireCenter(tireCenterFile, ios::in | ios::binary);
 	Article article{ "", "", NULL, NULL, NULL, '\0' };
 	array<Article, ARTIEKELEN> articles = { article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article, article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article };
 	Customer customer{ "", "", '\0' };
-	array<Customer, CUSTOMERS> customers = { customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer };
+	array<Customer, KLANTEN> customers = { customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer };
 	TireCenter tireCenter{ "", "", articles, customers};
 	tireCenters.clear();
 
@@ -2044,7 +2051,7 @@ void readtirecenters(const static string& tireCenterFile, vector<TireCenter*> ti
 }
 
 void searchtirecenter(vector<TireCenter*> tireCenters) {
-	int i, id;
+	size_t i, id;
 	char choice, redo = 'r';
 	ostringstream stream;
 	
@@ -2076,8 +2083,8 @@ void searchtirecenter(vector<TireCenter*> tireCenters) {
 	}
 }
 
-void addtirecenter(const static string& tireCenterFile, vector<TireCenter*> tireCenters, vector<Article*> articles, vector<Customer*> customers, bool newTireCenter, int* tireCenterID, int articleID, int customerID) {
-	int i, j, n, id = 1;
+void addtirecenter(const string& tireCenterFile, vector<TireCenter*> tireCenters, vector<Article*> articles, vector<Customer*> customers, bool newTireCenter, size_t* tireCenterID, size_t articleID, size_t customerID) {
+	size_t i, j, n, id = 1;
 	char choice = 't', filter = 't';
 	bool free, occured;
 	string name, address;
@@ -2431,9 +2438,10 @@ void addtirecenter(const static string& tireCenterFile, vector<TireCenter*> tire
 	readtirecenters(tireCenterFile, tireCenters);
 }
 
-void updatestock(const static string& articleFile, vector<Article*> articles, vector<int> articlesPos, int id, int ammount)
+void updatestock(const string& articleFile, vector<Article*> articles, vector<streamoff> articlesPos, size_t id, int ammount)
 {
-	int newID, newAmmount = 0;											//zodat automatisch update als ammount word mee gegeven
+	int newAmmount = 0;											//zodat automatisch update als ammount word mee gegeven
+	size_t newID;
 	char achoice, choice = 'c';											//zodat het automatisch update als een id word mee gegeven
 	ofstream changeArticle(articleFile, ios::out | ios::binary);
 
@@ -2523,7 +2531,7 @@ void updatestock(const static string& articleFile, vector<Article*> articles, ve
 
 bool isSubstring(string s1, string s2)
 {
-	int i, M = s1.length(), N = s2.length();
+	size_t i, M = s1.length(), N = s2.length();
 	bool substring = false;
 
 	for (i = 0; i <= N - M; i++) {
@@ -2542,7 +2550,7 @@ bool isSubstring(string s1, string s2)
 	return substring;
 }
 
-inline bool fileTest(const static string& name) {
+inline bool fileTest(const string& name) {
 	if (FILE* file = fopen(name.c_str(), "r")) {
 		fclose(file);
 		return true;
