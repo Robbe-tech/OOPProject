@@ -10,6 +10,7 @@
 #include "TireCenter.h"
 
 #define _CRT_SECURE_NO_WARNINGS				//voor file test
+#include <stdio.h>
 
 using namespace std;
 
