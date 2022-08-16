@@ -50,7 +50,7 @@ string Tire::toString() const {
 	else
 		season = "Winter";
 	ostringstream stream;
-	stream << Article::toString() << endl << "Width: " << setw(20) << getWidth() << " mm" << endl << "Height: " << setw(20) << getHeight() << " mm" << endl << "SpeedIndex: " << setw(20) << getSpeedIndex() << endl << "Season: " << setw(20) << season;
+	stream << Article::toString() << endl << setw(20) << "Width: " << width << " mm" << endl << setw(20) << "Height: " << getHeight() << " mm" << endl << setw(20) << "SpeedIndex: " << getSpeedIndex() << endl << setw(20) << "Season: " << season;
 	return stream.str();
 }
 
@@ -61,13 +61,16 @@ string Tire::toTable() const {
 	else
 		season = "Winter";
 	ostringstream stream;
-	stream << Article::toTable() << setw(5) << getWidth() << setw(10) << getHeight() << setw(20) << season << setw(15) << getSpeedIndex();
+	stream << Article::toTable() << setw(10) << getWidth() << setw(20) << getHeight() << setw(15) << season << getSpeedIndex();
 	return stream.str();
 }
 
 void Tire::toFile(ofstream& outFile, streamoff* pos) {
-	outFile.seekp(*pos);
-	outFile.write(reinterpret_cast<char*>(this), sizeof(Tire));
+	Article::toFile(outFile, pos);
+	outFile.write((char*)&width, sizeof(int));
+	outFile.write((char*)&height, sizeof(int));
+	outFile.write((char*)speedIndex, sizeof(char[INDEX]));
+	outFile.write((char*)&season, sizeof(char));
 	*pos = outFile.tellp();
 }
 
@@ -75,7 +78,11 @@ void Tire::fromFile(ifstream& inFile, streamoff* pos) {
 	inFile.seekg(*pos);
 	if (inFile.peek() != EOF)
 	{
-		inFile.read(reinterpret_cast<char*>(this), sizeof(Tire));
+		Article::fromFile(inFile, pos);
+		inFile.read((char*)&width, sizeof(int));
+		inFile.read((char*)&height, sizeof(int));
+		inFile.read((char*)speedIndex, sizeof(char[INDEX]));
+		inFile.read((char*)&season, sizeof(char));
 		*pos = inFile.tellg();
 	}
 }

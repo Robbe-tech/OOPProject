@@ -1,2 +1,10 @@
-﻿  Project.cpp
-C:\Users\robbe\source\repos\OOP\OOPProject\OOPProject\Project.cpp(2554,19): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+﻿  Article.cpp
+  Company.cpp
+  Customer.cpp
+  Invoice.cpp
+  Project.cpp
+  Rim.cpp
+  Tire.cpp
+  TireCenter.cpp
+  Generating Code...
+  OOPProject.vcxproj -> C:\Users\robbe\source\repos\OOP\OOPProject\x64\Debug\OOPProject.exe

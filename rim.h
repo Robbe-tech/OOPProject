@@ -7,7 +7,7 @@
 
 class Rim : public Article {
 public:
-	Rim(const string&, const string&, int, const int, float, const char, const bool, const string&, const int);
+	Rim(const string& = "", const string& = "", int = NULL, const int = NULL, float = NULL, const char = '\0', const bool = false, const string& = "", const int = NULL);
 	virtual ~Rim() = default;
 
 	void setAluminum(const bool);

@@ -53,8 +53,8 @@ float Invoice::calculatePrice() {
 string Invoice::toString() const {
 	ostringstream stream;
 	int i = 0;
-	stream << "Customer:" << endl << customers.toString() << endl << endl << "Total Price: " << setw(20) << setprecision(2) << fixed << showpoint << getPrice() << endl << "Discount: " << setw(20) << getDiscount() << "%" << endl
-		<< endl << "Articles:" << endl << "ID" << setw(3) << "Name" << setw(CHAR) << "Manufacturer" << setw(CHAR) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(10) << "Type" << endl;
+	stream << "Customer:" << endl << customers.toString() << endl << endl << setw(20) << "Total Price: " << setprecision(2) << fixed << showpoint << getPrice() << endl << setw(20) << "Discount: " << getDiscount() << "%" << endl
+		<< endl << "Articles:" << endl << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << "Type" << endl;
 	while (articles[i].getType() != '\0' && i < ARTIEKELEN) {
 		stream << (i + 1) << setw(3) << articles[i].toTable() << endl;
 		i++;
@@ -64,18 +64,31 @@ string Invoice::toString() const {
 
 string Invoice::toTable() const {
 	ostringstream stream;
-	stream << customers.getName() << setw(NAME) << articles[0].getName() << setw(CHAR) << setprecision(2) << fixed << showpoint << getPrice() << setw(10) << setprecision(2) << fixed << showpoint << getDiscount();
+	stream << setw(NAME) << customers.getName() << setw(CHAR) << articles[0].getName() << setw(10) << setprecision(2) << fixed << showpoint << getPrice() << getDiscount();
 	return stream.str();
 }
 
-void Invoice::toFile(ofstream& outFile, int loc) {
-	outFile.seekp(loc);
-	outFile.write(reinterpret_cast<char*>(this), sizeof(Invoice));
+void Invoice::toFile(ofstream& outFile) {
+	int i;
+	streamoff loc = outFile.tellp();
+	customers.toFile(outFile, &loc);
+	for (i = 0; i < ARTIEKELEN; i++) {
+		articles[i].toFile(outFile, &loc);
+	}
+	outFile.write((char*)&price, sizeof(float));
+	outFile.write((char*)&discount, sizeof(int));
 }
 
 void Invoice::fromFile(ifstream& inFile) {
 	if (inFile.peek() != EOF)
 	{
-		inFile.read(reinterpret_cast<char*>(this), sizeof(Invoice));
+		int i;
+		streamoff loc = inFile.tellg();
+		customers.fromFile(inFile, &loc);
+		for (i = 0; i < ARTIEKELEN; i++) {
+			articles[i].fromFile(inFile, &loc);
+		}
+		inFile.read((char*)&price, sizeof(float));
+		inFile.read((char*)&discount, sizeof(int));
 	}
 }

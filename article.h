@@ -13,7 +13,7 @@ using namespace std;
 
 class Article {
 public:
-	Article(const string&, const string&, int, const int, float, const char);
+	Article(const string& = "", const string& = "", int = NULL, const int = NULL, float = NULL, const char = '\0');
 	virtual ~Article() = default;
 
 	void setName(const string&);

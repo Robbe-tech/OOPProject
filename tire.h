@@ -7,7 +7,7 @@
 
 class Tire : public Article {
 public:
-	Tire(const string&, const string&, int, const int, float, const char, const int, const int, const string&, const char);
+	Tire(const string& = "", const string& = "", int = NULL, const int = NULL, float = NULL, const char = '\0', const int = NULL, const int = NULL, const string & = "", const char = '\0');
 	virtual ~Tire() = default;
 
 	void setWidth(const int);

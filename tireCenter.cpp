@@ -49,16 +49,16 @@ array<Customer, KLANTEN> TireCenter::getCustomers() const {
 string TireCenter::toString() const {
 	ostringstream stream;
 	int i = 0;
-	stream << "Name: " << setw(20) << getName() << endl << "Address: " << setw(20) << getAddress() << endl << endl << "Articles:" << endl
-		<< "ID" << setw(3) << "Name" << setw(CHAR) << "Manufacturer" << setw(CHAR) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(10) << "Type" << endl;
+	stream << setw(20) << "Name: " << getName() << endl << setw(20) << "Address: " << getAddress() << endl << endl << "Articles:" << endl
+		<< setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << "Type" << endl;
 	while (articles[i].getType() != '\0' && i < ARTIEKELEN) {
-		stream << (i + 1) << setw(3) << articles[i].toTable() << endl;
+		stream << setw(3) << (i + 1) << articles[i].toTable() << endl;
 		i++;
 	}
 	i = 0;
-	stream << endl << "Customers:" << endl << "ID" << setw(3) << "Name" << setw(NAME) << "Address" << setw(ADDRESS) << "Type" << endl;
+	stream << endl << "Customers:" << endl << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << "Type" << endl;
 	while (customers[i].getType() != '\0' && i < KLANTEN) {
-		stream << (i + 1) << setw(3) << customers[i].toTable() << endl;
+		stream << setw(3) << (i + 1) << customers[i].toTable() << endl;
 		i++;
 	}
 	return stream.str();
@@ -71,12 +71,38 @@ string TireCenter::toTable() const {
 }
 
 void TireCenter::toFile(ofstream& outFile) {
-	outFile.write(reinterpret_cast<char*>(this), sizeof(TireCenter));
+	int i;
+	streamoff loc;
+
+	outFile.write((char*)name, sizeof(char[NAME]));
+	outFile.write((char*)address, sizeof(char[ADDRESS]));
+	loc = outFile.tellp();
+
+	for (i = 0; i < KLANTEN; i++) {
+		customers[i].toFile(outFile, &loc);
+	}
+
+	for (i = 0; i < ARTIEKELEN; i++) {
+		articles[i].toFile(outFile, &loc);
+	}
 }
 
 void TireCenter::fromFile(ifstream& inFile) {
 	if (inFile.peek() != EOF)
 	{
-		inFile.read(reinterpret_cast<char*>(this), sizeof(TireCenter));
+		int i;
+		streamoff loc;
+
+		inFile.read((char*)name, sizeof(char[NAME]));
+		inFile.read((char*)address, sizeof(char[ADDRESS]));
+		loc = inFile.tellg();
+
+		for (i = 0; i < KLANTEN; i++) {
+			customers[i].fromFile(inFile, &loc);
+		}
+
+		for (i = 0; i < ARTIEKELEN; i++) {
+			articles[i].fromFile(inFile, &loc);
+		}
 	}
 }

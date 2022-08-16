@@ -45,7 +45,7 @@ string Customer::toString() const {
 	else
 		type = "Company";
 	ostringstream stream;
-	stream << "Name: " << setw(20) << getName() << endl << "Address: " << setw(20) << getAddress() << endl << "Type: " << setw(20) << type;
+	stream << setw(20) << "Name: " << getName() << endl << setw(20) << "Address: " << getAddress() << endl << setw(20) << "Type: " << type;
 	return stream.str();
 }
 
@@ -56,13 +56,15 @@ string Customer::toTable() const {
 	else
 		type = "Company";
 	ostringstream stream;
-	stream << getName() << setw(NAME) << getAddress() << setw(ADDRESS) << type;
+	stream << setw(NAME) << getName() << setw(ADDRESS) << getAddress() << setw(10) << type;
 	return stream.str();
 }
 
 void Customer::toFile(ofstream& outFile, streamoff* pos) {
 	outFile.seekp(*pos);
-	outFile.write(reinterpret_cast<char*>(this), sizeof(Customer));
+	outFile.write((char*)name, sizeof(char[NAME]));
+	outFile.write((char*)address, sizeof(char[ADDRESS]));
+	outFile.write((char*)&type, sizeof(char));
 	*pos = outFile.tellp();
 }
 
@@ -70,7 +72,9 @@ void Customer::fromFile(ifstream& inFile, streamoff* pos) {
 	inFile.seekg(*pos);
 	if (inFile.peek() != EOF)
 	{
-		inFile.read(reinterpret_cast<char*>(this), sizeof(Customer));
+		inFile.read((char*)name, sizeof(char[NAME]));
+		inFile.read((char*)address, sizeof(char[ADDRESS]));
+		inFile.read((char*)&type, sizeof(char));
 		*pos = inFile.tellg();
 	}
 }

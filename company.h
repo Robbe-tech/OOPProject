@@ -7,7 +7,7 @@
 
 class Company : public Customer{
 public:
-	Company(const string&, const string&, char, const string&, int);
+	Company(const string& = "", const string& = "", char = '\0', const string& = "", int = NULL);
 	virtual ~Company() = default;
 
 	void setVAT(const string&);

@@ -42,7 +42,7 @@ string Rim::toString() const {
 	else
 		alu = "False";
 	ostringstream stream;
-	stream << Article::toString() << endl << "Aluminum: " << setw(20) << alu << endl << "Color" << setw(20) << getColor() << endl << "Width" << setw(20) << getWidth() << " Inch";
+	stream << Article::toString() << endl << setw(20) << "Aluminum: " << alu << endl << setw(20) << "Color" << getColor() << endl << setw(20) << "Width" << getWidth() << " Inch";
 	return stream.str();
 }
 
@@ -53,13 +53,15 @@ string Rim::toTable() const {
 	else
 		alu = "False";
 	ostringstream stream;
-	stream << Article::toTable() << setw(5) << getWidth() << setw(10) << alu << setw(20) << getColor();
+	stream << Article::toTable() << setw(10) << getWidth() << setw(20) << alu << getColor();
 	return stream.str();
 }
 
 void Rim::toFile(ofstream& outFile, streamoff* pos) {
-	outFile.seekp(*pos);
-	outFile.write(reinterpret_cast<char*>(this), sizeof(Rim));
+	Article::toFile(outFile, pos);
+	outFile.write((char*)&aluminum, sizeof(bool));
+	outFile.write((char*)color, sizeof(char[COLOR]));
+	outFile.write((char*)&width, sizeof(int));
 	*pos = outFile.tellp();
 }
 
@@ -67,7 +69,10 @@ void Rim::fromFile(ifstream& inFile, streamoff* pos) {
 	inFile.seekg(*pos);
 	if (inFile.peek() != EOF)
 	{
-		inFile.read(reinterpret_cast<char*>(this), sizeof(Rim));
+		Article::fromFile(inFile, pos);
+		inFile.read((char*)&aluminum, sizeof(bool));
+		inFile.read((char*)color, sizeof(char[COLOR]));
+		inFile.read((char*)&width, sizeof(int));
 		*pos = inFile.tellg();
 	}
 }

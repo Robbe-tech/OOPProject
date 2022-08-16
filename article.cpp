@@ -67,9 +67,9 @@ string Article::toString() const {
 	else
 		type = "Tyre";
 	ostringstream stream;
-	stream << "Name: " << setw(20) << getName() << endl << "Manufacturer: " << setw(20) << getManufacturer() << endl
-		<< "Stock: " << setw(20) << getStock() << endl << "Diameter: " << setw(20) << getDiameter() << endl
-		<< "Price: " << setw(20) << setprecision(2) << fixed << showpoint << getPrice() << endl << "Type: " << setw(20) << type;
+	stream << setw(20) << "Name: " << getName() << endl << setw(20) << "Manufacturer: " << getManufacturer() << endl
+		<< setw(20) << "Stock: " << getStock() << endl << setw(20) << "Diameter: " << getDiameter() << endl
+		<< setw(20) << "Price: " << setprecision(2) << fixed << showpoint << getPrice() << endl << setw(20) << "Type: " << type;
 	return stream.str();
 }
 
@@ -80,14 +80,19 @@ string Article::toTable() const {
 	else
 		type = "Tyre";
 	ostringstream stream;
-	stream << getName() << setw(CHAR) << getManufacturer() << setw(CHAR) << getStock() << setw(10)
-		<< getDiameter() << setw(10) << setprecision(2) << fixed << showpoint << getPrice() << setw(10) << type;
+	stream << setw(CHAR) << getName() << setw(CHAR) << getManufacturer() << setw(10) << getStock() << setw(10)
+		<< getDiameter() << setw(10) << setprecision(2) << fixed << showpoint << getPrice() << setw(5) << type;
 	return stream.str();
 }
 
 void Article::toFile(ofstream& outFile, streamoff* pos) {
 	outFile.seekp(*pos);
-	outFile.write(reinterpret_cast<char*>(this), sizeof(Article));
+	outFile.write((char*)name, sizeof(char[CHAR]));
+	outFile.write((char*)manufacturer, sizeof(char[CHAR]));
+	outFile.write((char*)&stock, sizeof(int));
+	outFile.write((char*)&diameter, sizeof(int));
+	outFile.write((char*)&price, sizeof(float));
+	outFile.write((char*)&type, sizeof(char));
 	*pos = outFile.tellp();
 }
 
@@ -95,6 +100,12 @@ void Article::fromFile(ifstream& inFile, streamoff* pos) {
 	inFile.seekg(*pos);
 	if (inFile.peek() != EOF)
 	{
-		inFile.read(reinterpret_cast<char*>(this), sizeof(Article));
+		inFile.read((char*)name, sizeof(char[CHAR]));
+		inFile.read((char*)manufacturer, sizeof(char[CHAR]));
+		inFile.read((char*)&stock, sizeof(int));
+		inFile.read((char*)&diameter, sizeof(int));
+		inFile.read((char*)&price, sizeof(float));
+		inFile.read((char*)&type, sizeof(char));
+		*pos = inFile.tellg();
 	}
 }

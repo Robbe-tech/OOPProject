@@ -10,7 +10,7 @@
 
 class Invoice{
 public:
-	Invoice(Customer, array<Article, ARTIEKELEN>&, float, int);
+	Invoice(Customer, array<Article, ARTIEKELEN>&, float = NULL, int = NULL);
 	virtual ~Invoice() = default;
 
 	void setCustomer(Customer);
@@ -31,7 +31,7 @@ public:
 	string toString() const;
 	string toTable() const;
 
-	void toFile(ofstream&, int);
+	void toFile(ofstream&);
 	void fromFile(ifstream&);
 private:
 	Customer customers;
