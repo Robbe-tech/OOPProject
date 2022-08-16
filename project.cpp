@@ -142,7 +142,7 @@ int main(void) {
 		readarticles(articleFile, articles, articlesPos, employee, true, true, tireCenterFile, tireCenters, idptr);
 		readarticles(deletedArticleFile, deletedArticles, deletedArticlesPos, employee, false, true, tireCenterFile, tireCenters, idptr);
 		readcustomers(customerFile, customers, customersPos, true, true, tireCenterFile, tireCenters, idptr);
-		readcustomers(deletedCustomerFile, deletedCustomers, deletedCustomersPos, true, true, tireCenterFile, tireCenters, idptr);
+		readcustomers(deletedCustomerFile, deletedCustomers, deletedCustomersPos, false, true, tireCenterFile, tireCenters, idptr);
 		readinvoices(invoiceFile, invoices);
 		readtirecenters(tireCenterFile, tireCenters, employee, true, articles, customers, idptr);
 
@@ -343,8 +343,8 @@ void searcharticle(vector<Article*> articles)
 		cin >> choice;
 		if (choice == 'n' || choice == 'N')
 		{
-			cout << "Do you wish to look at all of the items (all), or look for a specific object (just type what you are looking for): ";
 			cin.ignore();
+			cout << "Do you wish to look at all of the items (all), or look for a specific object (just type what you are looking for): ";
 			getline(cin, search);
 			if (search.compare("all") == 0 || search.compare("All") == 0)
 			{
@@ -468,6 +468,7 @@ void addarticle(const string& articleFile, vector<Article*> articles, vector<str
 	char choice = 's', season;						//choice is type
 	string name, manufacturer, colorspeed;
 	bool occured = false, aluminum, articleAdd, done;
+	vector<Customer*> customers;
 	ofstream outArticle(articleFile, ios::out | ios::binary);
 
 	while (!(choice == 'e' || choice == 'E')) {
@@ -476,10 +477,10 @@ void addarticle(const string& articleFile, vector<Article*> articles, vector<str
 		cin >> choice;
 
 		if (choice == 't' || choice == 'T') {
+			cin.ignore();
 			do {
 				occured = false;
 				cout << "Enter the name: ";
-				cin.ignore();
 				getline(cin, name);
 				i = 0;
 				while (i < articles.size() && !occured) {
@@ -495,7 +496,6 @@ void addarticle(const string& articleFile, vector<Article*> articles, vector<str
 			getline(cin, manufacturer);
 			while (manufacturer.compare("") == 0) {
 				cout << "It can't be empty: ";
-				cin.ignore();
 				getline(cin, manufacturer);
 			}
 
@@ -556,10 +556,10 @@ void addarticle(const string& articleFile, vector<Article*> articles, vector<str
 		}
 		if (choice == 'r' || choice == 'R')
 		{
+			cin.ignore();
 			do {
 				occured = false;
 				cout << "Enter the name: ";
-				cin.ignore();
 				getline(cin, name);
 				i = 0;
 				while (i < articles.size() && !occured) {
@@ -572,11 +572,9 @@ void addarticle(const string& articleFile, vector<Article*> articles, vector<str
 			} while (occured);
 
 			cout << "Enter the manufacturer: ";
-			cin.ignore();
 			getline(cin, manufacturer);
 			while (manufacturer.compare("") == 0) {
 				cout << "It can't be empty";
-				cin.ignore();
 				getline(cin, manufacturer);
 			}
 
@@ -714,7 +712,7 @@ void addarticle(const string& articleFile, vector<Article*> articles, vector<str
 						addtirecenter(tireCenterFile, tireCenters, articles, customers, false, tireCenterID, articles.size(), 0);
 					}
 
-					readtirecenters(tireCenterFile, tireCenters);
+					readtirecenters(tireCenterFile, tireCenters, '\0', false, articles, customers, tireCenterID);
 				}
 			}
 		}
@@ -799,6 +797,7 @@ void changearticle(const string& articleFile, vector<Article*> articles, vector<
 	string manufacturer, colorIndex;
 	Rim tempRim{ "", "", NULL, NULL, NULL, '\0', false, "", NULL };
 	Tire tempTire{ "", "", NULL, NULL, NULL, '\0', NULL, NULL, "", '\0' };
+	vector<Customer*> customers;
 	ifstream readArticle(articleFile, ios::in | ios::binary);
 	ofstream writeArticle(articleFile, ios::out | ios::binary);
 
@@ -1131,7 +1130,7 @@ void changearticle(const string& articleFile, vector<Article*> articles, vector<
 								}
 							}
 
-							readtirecenters(tireCenterFile, tireCenters);
+							readtirecenters(tireCenterFile, tireCenters, '\0', false, articles, customers, tireCenterID);
 						}
 					}
 				}
@@ -1293,6 +1292,7 @@ void addcustomer(const string& customerFile, vector<Customer*> customers, vector
 	char choice = 'x';
 	string name, address, VAT;
 	ofstream outCustomer(customerFile, ios::out | ios::binary);
+	vector<Article*> articles;
 	bool customerAdd, done;
 
 	while (!(choice == 'e' || choice == 'E')) {
@@ -1306,7 +1306,6 @@ void addcustomer(const string& customerFile, vector<Customer*> customers, vector
 			getline(cin, name);
 
 			cout << "Enter the address: ";
-			cin.ignore();
 			getline(cin, address);
 
 			customers.push_back(new Customer(name, address, 'u'));
@@ -1320,11 +1319,9 @@ void addcustomer(const string& customerFile, vector<Customer*> customers, vector
 			getline(cin, name);
 
 			cout << "Enter the address: ";
-			cin.ignore();
 			getline(cin, address);
 
 			cout << "Enter the VAT: ";
-			cin.ignore();
 			getline(cin, VAT);
 
 			cout << "Enter the volume discount: ";
@@ -1343,6 +1340,8 @@ void addcustomer(const string& customerFile, vector<Customer*> customers, vector
 				cerr << "Something went wrong opening the customer file." << endl;
 				exit(EXIT_FAILURE);
 			}
+
+			cout << customers[customers.size() - 1]->toString();
 
 			if (customersPos.size() == 0) {
 				loc = 0;
@@ -1414,7 +1413,7 @@ void addcustomer(const string& customerFile, vector<Customer*> customers, vector
 						addtirecenter(tireCenterFile, tireCenters, articles, customers, false, tireCenterID, 0, customers.size());
 					}
 
-					readtirecenters(tireCenterFile, tireCenters);
+					readtirecenters(tireCenterFile, tireCenters, '\0', false, articles, customers, tireCenterID);
 				}
 			}
 		}
@@ -1495,6 +1494,7 @@ void changecustomer(const string& customerFile, vector<Customer*> customers, vec
 	string address, VAT;
 	Customer tempCustomer{ "", "", '\0' };
 	Company tempCompany{ "", "", '\0', "", NULL };
+	vector<Article*> articles;
 	ifstream readCustomer(customerFile, ios::in | ios::binary);
 	ofstream writeCustomer(customerFile, ios::out | ios::binary);
 
@@ -1706,7 +1706,7 @@ void changecustomer(const string& customerFile, vector<Customer*> customers, vec
 								}
 							}
 
-							readtirecenters(tireCenterFile, tireCenters);
+							readtirecenters(tireCenterFile, tireCenters, '\0', false, articles, customers, tireCenterID);
 						}
 					}
 				}
@@ -2146,10 +2146,10 @@ void makeorder(const string& invoiceFile, vector<Invoice*> invoices, const strin
 void readtirecenters(const string& tireCenterFile, vector<TireCenter*> tireCenters, char employee, bool first, vector<Article*> articles, vector<Customer*> customers, size_t* id) {
 	ifstream inTireCenter(tireCenterFile, ios::in | ios::binary);
 	Article article{ "", "", NULL, NULL, NULL, '\0' };
-	array<Article, ARTIEKELEN> articles = { article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article, article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article };
+	array<Article, ARTIEKELEN> artiekelen = { article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article, article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article };
 	Customer customer{ "", "", '\0' };
-	array<Customer, KLANTEN> customers = { customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer };
-	TireCenter tireCenter{ "", "", articles, customers};
+	array<Customer, KLANTEN> klanten = { customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer };
+	TireCenter tireCenter{ "", "", artiekelen, klanten};
 	tireCenters.clear();
 
 	if (!inTireCenter) {
@@ -2174,7 +2174,7 @@ void readtirecenters(const string& tireCenterFile, vector<TireCenter*> tireCente
 
 	tireCenter.fromFile(inTireCenter);
 
-	while (!(tireCenter.getName().compare(""))) {
+	while (tireCenter.getName().compare("") != 0) {
 		tireCenters.push_back(new TireCenter(tireCenter));
 		tireCenter.setName("");
 		tireCenter.fromFile(inTireCenter);
@@ -2231,10 +2231,10 @@ void addtirecenter(const string& tireCenterFile, vector<TireCenter*> tireCenters
 			cin >> filter;
 
 			if (filter == 'a' || filter == 'A') {
+				cin.ignore();
 				do {
 					occured = false;
 					cout << "Enter the name: ";
-					cin.ignore();
 					getline(cin, name);
 					i = 0;
 					while (i < articles.size() && !occured) {
@@ -2247,11 +2247,9 @@ void addtirecenter(const string& tireCenterFile, vector<TireCenter*> tireCenters
 				} while (occured);
 
 				cout << "Enter the address: ";
-				cin.ignore();
 				getline(cin, address);
 				while (address.compare("") == 0) {
 					cout << "The address can't be empty: ";
-					cin.ignore();
 					getline(cin, address);
 				}
 

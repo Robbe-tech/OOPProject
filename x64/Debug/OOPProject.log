@@ -1,5 +1,2 @@
 ﻿  Project.cpp
-C:\Users\robbe\source\repos\OOP\OOPProject\OOPProject\Project.cpp(144,54): error C2660: 'readcustomers': function does not take 3 arguments
-C:\Users\robbe\source\repos\OOP\OOPProject\OOPProject\Project.cpp(21,6): message : see declaration of 'readcustomers'
-C:\Users\robbe\source\repos\OOP\OOPProject\OOPProject\Project.cpp(145,75): error C2660: 'readcustomers': function does not take 3 arguments
-C:\Users\robbe\source\repos\OOP\OOPProject\OOPProject\Project.cpp(21,6): message : see declaration of 'readcustomers'
+  OOPProject.vcxproj -> C:\Users\robbe\source\repos\OOP\OOPProject\x64\Debug\OOPProject.exe
