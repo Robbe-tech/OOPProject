@@ -620,7 +620,12 @@ void addarticle(const string& articleFile, vector<Article*> articles, vector<str
 
 			cout << articles[articles.size() - 1]->toString() << endl << articles.size();
 
-			loc = outArticle.eof();
+			if (articlesPos.size() == 0) {
+				loc = 0;
+			}
+			else {
+				loc = articlesPos[articlesPos.size() - 1];
+			}
 			articles[articles.size() - 1]->toFile(outArticle, &loc);
 
 			readarticles(articleFile, articles, articlesPos);
@@ -739,7 +744,13 @@ void deletearticle(const string& articleFile, vector<Article*> articles, vector<
 						exit(EXIT_FAILURE);
 					}
 
-					loc = outDeletedArticles.eof();
+					if (deletedArticlesPos.size() == 0) {
+						loc = 0;
+					}
+					else {
+						loc = deletedArticlesPos[deletedArticlesPos.size() - 1];
+					}
+
 					articles[id - 1]->toFile(outDeletedArticles, &loc);
 					readarticles(deletedArticleFile, deletedArticles, deletedArticlesPos);
 					remove(articleFile.c_str());
@@ -1290,7 +1301,12 @@ void addcustomer(const string& customerFile, vector<Customer*> customers, vector
 				exit(EXIT_FAILURE);
 			}
 
-			loc = outCustomer.eof();
+			if (customersPos.size() == 0) {
+				loc = 0;
+			}
+			else {
+				loc = customersPos[customersPos.size() - 1];
+			}
 			customers[customers.size() - 1]->toFile(outCustomer, &loc);
 
 			readcustomers(customerFile, customers, customersPos);
@@ -1402,7 +1418,12 @@ void deletecustomer(const string& customerFile, vector<Customer*> customers, vec
 						exit(EXIT_FAILURE);
 					}
 
-					loc = outDeletedCustomers.eof();
+					if (deletedCustomersPos.size() == 0) {
+						loc = 0;
+					}
+					else {
+						loc = deletedCustomersPos[deletedCustomersPos.size() - 1];
+					}
 					customers[id - 1]->toFile(outDeletedCustomers, &loc);
 					readcustomers(deletedCustomerFile, deletedCustomers, deletedCustomersPos);
 					remove(customerFile.c_str());
@@ -2039,7 +2060,7 @@ void makeorder(const string& invoiceFile, vector<Invoice*> invoices, const strin
 							cerr << "Something went wrong opening the tire center file";
 							exit(EXIT_FAILURE);
 						}
-						outInvoice.seekp(outInvoice.eof());
+						outInvoice.seekp(sizeof(Invoice) * (invoices.size() - 1));
 						invoices[invoices.size() - 1]->toFile(outInvoice);
 
 						artiekelen = { article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article };
@@ -2051,7 +2072,7 @@ void makeorder(const string& invoiceFile, vector<Invoice*> invoices, const strin
 					cerr << "Something went wrong opening the tire center file";
 					exit(EXIT_FAILURE);
 				}
-				outInvoice.seekp(outInvoice.eof());
+				outInvoice.seekp(sizeof(Invoice)* (invoices.size() - 1));
 				invoices[invoices.size() - 1]->toFile(outInvoice);
 			}
 		}
