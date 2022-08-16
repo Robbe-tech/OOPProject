@@ -50,7 +50,7 @@ string Tire::toString() const {
 	else
 		season = "Winter";
 	ostringstream stream;
-	stream << Article::toString() << endl << setw(20) << "Width: " << width << " mm" << endl << setw(20) << "Height: " << getHeight() << " mm" << endl << setw(20) << "SpeedIndex: " << getSpeedIndex() << endl << setw(20) << "Season: " << season;
+	stream << Article::toString() << endl << left << setw(20) << "Width: " << width << " mm" << endl << setw(20) << "Height: " << getHeight() << " mm" << endl << setw(20) << "SpeedIndex: " << getSpeedIndex() << endl << setw(20) << "Season: " << season;
 	return stream.str();
 }
 
@@ -61,7 +61,7 @@ string Tire::toTable() const {
 	else
 		season = "Winter";
 	ostringstream stream;
-	stream << Article::toTable() << setw(10) << getWidth() << setw(20) << getHeight() << setw(15) << season << getSpeedIndex();
+	stream << Article::toTable() << left << setw(10) << getWidth() << setw(20) << getHeight() << setw(15) << season << getSpeedIndex();
 	return stream.str();
 }
 

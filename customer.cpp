@@ -45,7 +45,7 @@ string Customer::toString() const {
 	else
 		type = "Company";
 	ostringstream stream;
-	stream << setw(20) << "Name: " << getName() << endl << setw(20) << "Address: " << getAddress() << endl << setw(20) << "Type: " << type;
+	stream << left << setw(20) << "Name: " << getName() << endl << setw(20) << "Address: " << getAddress() << endl << setw(20) << "Type: " << type;
 	return stream.str();
 }
 
@@ -56,7 +56,7 @@ string Customer::toTable() const {
 	else
 		type = "Company";
 	ostringstream stream;
-	stream << setw(NAME) << getName() << setw(ADDRESS) << getAddress() << setw(10) << type;
+	stream << left << setw(NAME) << getName() << setw(ADDRESS) << getAddress() << setw(10) << type;
 	return stream.str();
 }
 

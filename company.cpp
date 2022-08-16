@@ -29,13 +29,13 @@ int Company::getVolumeDiscount() const {
 
 string Company::toString() const {
 	ostringstream stream;
-	stream << Customer::toString() << endl << setw(20) << "VAT: " << getVAT() << endl << setw(20) << "Volume Discount: " << getVolumeDiscount();
+	stream << Customer::toString() << endl << left << setw(20) << "VAT: " << getVAT() << endl << setw(20) << "Volume Discount: " << getVolumeDiscount();
 	return stream.str();
 }
 
 string Company::toTable() const {
 	ostringstream stream;
-	stream << Customer::toTable() << setw(VATNUM) << getVAT() << getAddress();
+	stream << Customer::toTable() << left << setw(VATNUM) << getVAT() << getAddress();
 	return stream.str();
 }
 

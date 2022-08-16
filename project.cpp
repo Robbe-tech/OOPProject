@@ -330,18 +330,18 @@ void searcharticle(vector<Article*> articles)
 			getline(cin, search);
 			if (search.compare("all") == 0 || search.compare("All") == 0)
 			{
-				stream << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Height/Aluminum" << setw(20) << "Color/Season" << "SpeedIndex" << endl;
+				stream << left << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Height/Aluminum" << setw(20) << "Color/Season" << "SpeedIndex" << endl;
 				for (i = 0; i < articles.size(); i++) {
-					stream << setw(3) << (i + 1) << articles[i]->toTable() << endl;
+					stream << left << setw(3) << (i + 1) << articles[i]->toTable() << endl;
 				}
 				cout << stream.str();
 			}
 			else
 			{
-				stream << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Height/Aluminum" << setw(20) << "Color/Season" << "SpeedIndex" << endl;
+				stream << left << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Height/Aluminum" << setw(20) << "Color/Season" << "SpeedIndex" << endl;
 				for (i = 0; i < articles.size(); i++) {
 					if (isSubstring(search, articles[i]->getName())) {
-						stream << setw(3) << (i + 1) << articles[i]->toTable() << endl;
+						stream << left << setw(3) << (i + 1) << articles[i]->toTable() << endl;
 					}
 				}
 				cout << stream.str();
@@ -363,20 +363,20 @@ void searcharticle(vector<Article*> articles)
 				getline(cin, search);
 				if (search.compare("all") == 0 || search.compare("All") == 0)
 				{
-					stream << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Height" << setw(20) << "Season" << "SpeedIndex" << endl;
+					stream << left << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Height" << setw(20) << "Season" << "SpeedIndex" << endl;
 					for (i = 0; i < articles.size(); i++) {
 						if (articles[i]->getType() == 't' || articles[i]->getType() == 'T') {
-							stream << setw(3) << (i + 1) << articles[i]->toTable() << endl;
+							stream << left << setw(3) << (i + 1) << articles[i]->toTable() << endl;
 						}
 					}
 					cout << stream.str();
 				}
 				else
 				{
-					stream << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Height" << setw(20) << "Season" << "SpeedIndex" << endl;
+					stream << left << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Height" << setw(20) << "Season" << "SpeedIndex" << endl;
 					for (i = 0; i < articles.size(); i++) {
 						if ((articles[i]->getType() == 't' || articles[i]->getType() == 'T') && isSubstring(search, articles[i]->getName())) {
-							stream << setw(3) << (i + 1) << articles[i]->toTable() << endl;
+							stream << left << setw(3) << (i + 1) << articles[i]->toTable() << endl;
 						}
 					}
 					cout << stream.str();
@@ -390,20 +390,20 @@ void searcharticle(vector<Article*> articles)
 				getline(cin, search);
 				if (search.compare("all") == 0 || search.compare("All") == 0)
 				{
-					stream << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Aluminum" << "Color" << endl;
+					stream << left << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Aluminum" << "Color" << endl;
 					for (i = 0; i < articles.size(); i++) {
 						if (articles[i]->getType() == 'r' || articles[i]->getType() == 'R') {
-							stream << setw(3) << (i + 1) << articles[i]->toTable() << endl;
+							stream << left << setw(3) << (i + 1) << articles[i]->toTable() << endl;
 						}
 					}
 					cout << stream.str();
 				}
 				else
 				{
-					stream << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Aluminum" << "Color" << endl;
+					stream << left << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Aluminum" << "Color" << endl;
 					for (i = 0; i < articles.size(); i++) {
 						if ((articles[i]->getType() == 'r' || articles[i]->getType() == 'R') && isSubstring(search, articles[i]->getName())) {
-							stream << setw(3) << (i + 1) << articles[i]->toTable() << endl;
+							stream << left << setw(3) << (i + 1) << articles[i]->toTable() << endl;
 						}
 					}
 					cout << stream.str();
@@ -418,20 +418,20 @@ void searcharticle(vector<Article*> articles)
 				getline(cin, search);
 				if (search.compare("all") == 0 || search.compare("All") == 0)
 				{
-					stream << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Height/Aluminum" << setw(20) << "Color/Season" << "SpeedIndex" << endl;
+					stream << left << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Height/Aluminum" << setw(20) << "Color/Season" << "SpeedIndex" << endl;
 					for (i = 0; i < articles.size(); i++) {
 						if (articles[i]->getDiameter() == size) {
-							stream << setw(3) << (i + 1) << articles[i]->toTable() << endl;
+							stream << left << setw(3) << (i + 1) << articles[i]->toTable() << endl;
 						}
 					}
 					cout << stream.str();
 				}
 				else
 				{
-					stream << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Height/Aluminum" << setw(20) << "Color/Season" << "SpeedIndex" << endl;
+					stream << left << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << setw(5) << "Type" << setw(10) << "Width" << setw(20) << "Height/Aluminum" << setw(20) << "Color/Season" << "SpeedIndex" << endl;
 					for (i = 0; i < articles.size(); i++) {
 						if (articles[i]->getDiameter() == size && isSubstring(search, articles[i]->getName())) {
-							stream << setw(3) << (i + 1) << articles[i]->toTable() << endl;
+							stream << left << setw(3) << (i + 1) << articles[i]->toTable() << endl;
 						}
 					}
 					cout << stream.str();
@@ -1148,18 +1148,18 @@ void searchcustomer(vector<Customer*> customers)
 			getline(cin, search);
 			if (search.compare("all") == 0 || search.compare("All") == 0)
 			{
-				stream << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << setw(10) << "Type" << setw(VATNUM) << "VAT" << "Volume Discount" << endl;
+				stream << left << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << setw(10) << "Type" << setw(VATNUM) << "VAT" << "Volume Discount" << endl;
 				for (i = 0; i < customers.size(); i++) {
-					stream << setw(3) << (i + 1) << customers[i]->toTable() << endl;
+					stream << left << setw(3) << (i + 1) << customers[i]->toTable() << endl;
 				}
 				cout << stream.str();
 			}
 			else
 			{
-				stream << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << setw(10) << "Type" << setw(VATNUM) << "VAT" << "Volume Discount" << endl;
+				stream << left << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << setw(10) << "Type" << setw(VATNUM) << "VAT" << "Volume Discount" << endl;
 				for (i = 0; i < customers.size(); i++) {
 					if (isSubstring(search, customers[i]->getName())) {
-						stream << setw(3) << (i + 1) << customers[i]->toTable() << endl;
+						stream << left << setw(3) << (i + 1) << customers[i]->toTable() << endl;
 					}
 				}
 				cout << stream.str();
@@ -1181,20 +1181,20 @@ void searchcustomer(vector<Customer*> customers)
 				getline(cin, search);
 				if (search.compare("all") == 0 || search.compare("All") == 0)
 				{
-					stream << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << "Type" << endl;
+					stream << left << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << "Type" << endl;
 					for (i = 0; i < customers.size(); i++) {
 						if (customers[i]->getType() == 'u' || customers[i]->getType() == 'U') {
-							stream << setw(3) << (i + 1) << customers[i]->toTable() << endl;
+							stream << left << setw(3) << (i + 1) << customers[i]->toTable() << endl;
 						}
 					}
 					cout << stream.str();
 				}
 				else
 				{
-					stream << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << "Type" << endl;
+					stream << left << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << "Type" << endl;
 					for (i = 0; i < customers.size(); i++) {
 						if ((customers[i]->getType() == 'u' || customers[i]->getType() == 'U') && isSubstring(search, customers[i]->getName())) {
-							stream << setw(3) << (i + 1) << customers[i]->toTable() << endl;
+							stream << left << setw(3) << (i + 1) << customers[i]->toTable() << endl;
 						}
 					}
 					cout << stream.str();
@@ -1208,20 +1208,20 @@ void searchcustomer(vector<Customer*> customers)
 				getline(cin, search);
 				if (search.compare("all") == 0 || search.compare("All") == 0)
 				{
-					stream << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << setw(10) << "Type" << setw(VATNUM) << "VAT" << "Volume Discount" << endl;
+					stream << left << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << setw(10) << "Type" << setw(VATNUM) << "VAT" << "Volume Discount" << endl;
 					for (i = 0; i < customers.size(); i++) {
 						if (customers[i]->getType() == 'o' || customers[i]->getType() == 'O') {
-							stream << setw(3) << (i + 1) << customers[i]->toTable() << endl;
+							stream << left << setw(3) << (i + 1) << customers[i]->toTable() << endl;
 						}
 					}
 					cout << stream.str();
 				}
 				else
 				{
-					stream << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << setw(10) << "Type" << setw(VATNUM) << "VAT" << "Volume Discount" << endl;
+					stream << left << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << setw(10) << "Type" << setw(VATNUM) << "VAT" << "Volume Discount" << endl;
 					for (i = 0; i < customers.size(); i++) {
 						if ((customers[i]->getType() == 'o' || customers[i]->getType() == 'O') && isSubstring(search, customers[i]->getName())) {
-							stream << setw(3) << (i + 1) << customers[i]->toTable() << endl;
+							stream << left << setw(3) << (i + 1) << customers[i]->toTable() << endl;
 						}
 					}
 					cout << stream.str();
@@ -1677,9 +1677,9 @@ void searchinvoice(vector<Invoice*> invoices)
 		cin >> choice;
 		if (choice == 'a' || choice == 'A')
 		{
-			stream << setw(3) << "ID" << setw(NAME) << "Customer Name" << setw(CHAR) << "Article" << setw(10) << "Price" << "Discount" << endl;
+			stream << left << setw(3) << "ID" << setw(NAME) << "Customer Name" << setw(CHAR) << "Article" << setw(10) << "Price" << "Discount" << endl;
 			for (i = 0; i < invoices.size(); i++) {
-				stream << setw(3) << (i + 1) << invoices[i]->toTable() << endl;
+				stream << left << setw(3) << (i + 1) << invoices[i]->toTable() << endl;
 			}
 			cout << stream.str();
 		}
@@ -1703,10 +1703,10 @@ void searchinvoice(vector<Invoice*> invoices)
 					cin >> article;
 				}
 				if (article == 'i' || article == 'I') {
-					stream << setw(3) << "ID" << setw(NAME) << "Customer Name" << setw(CHAR) << "Article" << setw(10) << "Price" << "Discount" << endl;
+					stream << left << setw(3) << "ID" << setw(NAME) << "Customer Name" << setw(CHAR) << "Article" << setw(10) << "Price" << "Discount" << endl;
 					for (i = 0; i < invoices.size(); i++) {
 						if ((invoices[i]->getCustomer().getType() == 'u' || invoices[i]->getCustomer().getType() == 'U') && isSubstring(search, invoices[i]->getCustomer().getName())) {
-							stream << setw(3) << (i + 1) << invoices[i]->toTable() << endl;
+							stream << left << setw(3) << (i + 1) << invoices[i]->toTable() << endl;
 						}
 					}
 					cout << stream.str();
@@ -1746,14 +1746,14 @@ void searchinvoice(vector<Invoice*> invoices)
 								}
 							}
 						}
-						stream << setw(20) << "Name" << customer[i] << endl << endl << "Articles" << endl
+						stream << left << setw(20) << "Name" << customer[i] << endl << endl << "Articles" << endl
 							<< setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Diameter" << setw(10) << "Price" << "Type" << endl;
 						for (j = 0; j < articles.size(); j++) {
 							if (articles[j]->getType() == 'r' || articles[j]->getType() == 'R')
 								type = "Rim";
 							else
 								type = "Tyre";
-							stream << setw(CHAR) << articles[j]->getName() << setw(CHAR) << articles[j]->getManufacturer() << setw(10)
+							stream << left << setw(CHAR) << articles[j]->getName() << setw(CHAR) << articles[j]->getManufacturer() << setw(10)
 								<< articles[j]->getDiameter() << setw(10) << setprecision(2) << fixed << showpoint << articles[i]->getPrice() << type;
 						}
 					}
@@ -1774,10 +1774,10 @@ void searchinvoice(vector<Invoice*> invoices)
 					cin >> article;
 				}
 				if (article == 'i' || article == 'I') {
-					stream << setw(3) << "ID" << setw(NAME) << "Customer Name" << setw(CHAR) << "Article" << setw(10) << "Price" << "Discount" << endl;
+					stream << left << setw(3) << "ID" << setw(NAME) << "Customer Name" << setw(CHAR) << "Article" << setw(10) << "Price" << "Discount" << endl;
 					for (i = 0; i < invoices.size(); i++) {
 						if ((invoices[i]->getCustomer().getType() == 'o' || invoices[i]->getCustomer().getType() == 'O') && isSubstring(search, invoices[i]->getCustomer().getName())) {
-							stream << setw(3) << (i + 1) << invoices[i]->toTable() << endl;
+							stream << left << setw(3) << (i + 1) << invoices[i]->toTable() << endl;
 						}
 					}
 					cout << stream.str();
@@ -1817,14 +1817,14 @@ void searchinvoice(vector<Invoice*> invoices)
 								}
 							}
 						}
-						stream << setw(20) << "Name" << customer[i] << endl << endl << "Articles" << endl << setw(CHAR)
+						stream << left << setw(20) << "Name" << customer[i] << endl << endl << "Articles" << endl << setw(CHAR)
 							<< "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Diameter" << setw(10) << "Price" << "Type" << endl;
 						for (j = 0; j < articles.size(); j++) {
 							if (articles[j]->getType() == 'r' || articles[j]->getType() == 'R')
 								type = "Rim";
 							else
 								type = "Tyre";
-							stream << setw(CHAR) << articles[j]->getName() << setw(CHAR) << articles[j]->getManufacturer() << setw(10)
+							stream << left << setw(CHAR) << articles[j]->getName() << setw(CHAR) << articles[j]->getManufacturer() << setw(10)
 								<< articles[j]->getDiameter() << setw(10) << setprecision(2) << fixed << showpoint << articles[i]->getPrice() << type;
 						}
 					}
@@ -1844,10 +1844,10 @@ void searchinvoice(vector<Invoice*> invoices)
 					cin >> article;
 				}
 				if (article == 'i' || article == 'I') {
-					stream << setw(3) << "ID" << setw(NAME) << "Customer Name" << setw(CHAR) << "Article" << setw(10) << "Price" << "Discount" << endl;
+					stream << left << setw(3) << "ID" << setw(NAME) << "Customer Name" << setw(CHAR) << "Article" << setw(10) << "Price" << "Discount" << endl;
 					for (i = 0; i < invoices.size(); i++) {
 						if (isSubstring(search, invoices[i]->getCustomer().getName())) {
-							stream << setw(3) << (i + 1) << invoices[i]->toTable() << endl;
+							stream << left << setw(3) << (i + 1) << invoices[i]->toTable() << endl;
 						}
 					}
 					cout << stream.str();
@@ -1887,14 +1887,14 @@ void searchinvoice(vector<Invoice*> invoices)
 								}
 							}
 						}
-						stream << setw(20) << "Name" << customer[i] << endl << endl << "Articles" << endl << setw(CHAR)
+						stream << left << setw(20) << "Name" << customer[i] << endl << endl << "Articles" << endl << setw(CHAR)
 							<< "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Diameter" << setw(10) << "Price" << "Type" << endl;
 						for (j = 0; j < articles.size(); j++) {
 							if (articles[j]->getType() == 'r' || articles[j]->getType() == 'R')
 								type = "Rim";
 							else
 								type = "Tyre";
-							stream << setw(CHAR) << articles[j]->getName() << setw(CHAR) << articles[j]->getManufacturer() << setw(10)
+							stream << left << setw(CHAR) << articles[j]->getName() << setw(CHAR) << articles[j]->getManufacturer() << setw(10)
 								<< articles[j]->getDiameter() << setw(10) << setprecision(2) << fixed << showpoint << articles[i]->getPrice() << type;
 						}
 					}
@@ -1993,14 +1993,14 @@ void makeorder(const string& invoiceFile, vector<Invoice*> invoices, const strin
 				}
 			}
 			cout << "Customer:" << endl << customers[customerid - 1]->toString() << endl << endl << "Articles:" << endl
-				<< setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << "Type" << endl;
+				<< left << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << "Type" << endl;
 
 			for (i = 0; i < addArticles.size(); i++) {
 				cout << addArticles[i]->toTable() << endl;
 				totalprice += (addArticles[i]->getPrice() * addArticles[i]->getStock());
 			}
 
-			cout << setw(20) << "Total price: " << totalprice;
+			cout << left << setw(20) << "Total price: " << totalprice;
 			if (totalstock <= 10 && (customers[customerid - 1]->getType() == 'o' || customers[customerid - 1]->getType() == 'O')) {
 				customerpos = customersPos[customerid - 2];
 
@@ -2013,7 +2013,7 @@ void makeorder(const string& invoiceFile, vector<Invoice*> invoices, const strin
 				discount = company.getVolumeDiscount();
 			}
 
-			cout << setw(20) << "Discount: " << discount << "%" << endl << endl << "Do you wish to save this invoice: y, or n: ";
+			cout << left << setw(20) << "Discount: " << discount << "%" << endl << endl << "Do you wish to save this invoice: y, or n: ";
 			cin >> add;
 			while (!(add == 'y' || add == 'Y' || add == 'n' || add == 'N')) {
 				cout << "Enter a valid choice: y, or n: ";
@@ -2089,9 +2089,9 @@ void searchtirecenter(vector<TireCenter*> tireCenters) {
 	while (redo == 'r' || redo == 'R') {
 		redo = 'b';
 		cout << "These are all current tire centers (Some may show up more than once due to too many customers)." << endl;
-		stream << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << setw(CHAR) << "Article Name" << "Customer Name" << endl;
+		stream << left << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << setw(CHAR) << "Article Name" << "Customer Name" << endl;
 		for (i = 0; i < tireCenters.size(); i++) {
-			stream << setw(3) << (i + 1) << tireCenters[i]->toTable() << endl;
+			stream << left << setw(3) << (i + 1) << tireCenters[i]->toTable() << endl;
 		}
 
 		cout << stream.str() << endl

@@ -49,14 +49,14 @@ array<Customer, KLANTEN> TireCenter::getCustomers() const {
 string TireCenter::toString() const {
 	ostringstream stream;
 	int i = 0;
-	stream << setw(20) << "Name: " << getName() << endl << setw(20) << "Address: " << getAddress() << endl << endl << "Articles:" << endl
+	stream << left << setw(20) << "Name: " << getName() << endl << setw(20) << "Address: " << getAddress() << endl << endl << "Articles:" << endl
 		<< setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << "Type" << endl;
 	while (articles[i].getType() != '\0' && i < ARTIEKELEN) {
 		stream << setw(3) << (i + 1) << articles[i].toTable() << endl;
 		i++;
 	}
 	i = 0;
-	stream << endl << "Customers:" << endl << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << "Type" << endl;
+	stream << endl << "Customers:" << endl << left << setw(3) << "ID" << setw(NAME) << "Name" << setw(ADDRESS) << "Address" << "Type" << endl;
 	while (customers[i].getType() != '\0' && i < KLANTEN) {
 		stream << setw(3) << (i + 1) << customers[i].toTable() << endl;
 		i++;

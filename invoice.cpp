@@ -53,7 +53,7 @@ float Invoice::calculatePrice() {
 string Invoice::toString() const {
 	ostringstream stream;
 	int i = 0;
-	stream << "Customer:" << endl << customers.toString() << endl << endl << setw(20) << "Total Price: " << setprecision(2) << fixed << showpoint << getPrice() << endl << setw(20) << "Discount: " << getDiscount() << "%" << endl
+	stream << "Customer:" << endl << customers.toString() << endl << endl << left << setw(20) << "Total Price: " << setprecision(2) << fixed << showpoint << getPrice() << endl << setw(20) << "Discount: " << getDiscount() << "%" << endl
 		<< endl << "Articles:" << endl << setw(3) << "ID" << setw(CHAR) << "Name" << setw(CHAR) << "Manufacturer" << setw(10) << "Stock" << setw(10) << "Diameter" << setw(10) << "Price" << "Type" << endl;
 	while (articles[i].getType() != '\0' && i < ARTIEKELEN) {
 		stream << (i + 1) << setw(3) << articles[i].toTable() << endl;
@@ -64,7 +64,7 @@ string Invoice::toString() const {
 
 string Invoice::toTable() const {
 	ostringstream stream;
-	stream << setw(NAME) << customers.getName() << setw(CHAR) << articles[0].getName() << setw(10) << setprecision(2) << fixed << showpoint << getPrice() << getDiscount();
+	stream << left << setw(NAME) << customers.getName() << setw(CHAR) << articles[0].getName() << setw(10) << setprecision(2) << fixed << showpoint << getPrice() << getDiscount();
 	return stream.str();
 }
 

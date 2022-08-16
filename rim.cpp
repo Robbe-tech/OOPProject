@@ -42,7 +42,7 @@ string Rim::toString() const {
 	else
 		alu = "False";
 	ostringstream stream;
-	stream << Article::toString() << endl << setw(20) << "Aluminum: " << alu << endl << setw(20) << "Color" << getColor() << endl << setw(20) << "Width" << getWidth() << " Inch";
+	stream << Article::toString() << endl << left << setw(20) << "Aluminum: " << alu << endl << setw(20) << "Color" << getColor() << endl << setw(20) << "Width" << getWidth() << " Inch";
 	return stream.str();
 }
 
@@ -53,7 +53,7 @@ string Rim::toTable() const {
 	else
 		alu = "False";
 	ostringstream stream;
-	stream << Article::toTable() << setw(10) << getWidth() << setw(20) << alu << getColor();
+	stream << Article::toTable() << left << setw(10) << getWidth() << setw(20) << alu << getColor();
 	return stream.str();
 }
 
