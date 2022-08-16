@@ -56,7 +56,7 @@ int main(void) {
 
 	char employee, option = 'b', checkcenter;
 
-	cout << "Are you the owner (o), or employee (e): " << endl;
+	cout << "Are you the owner (o), or employee (e): ";
 	cin >> employee;
 	while (!(employee == 'e' || employee == 'E' || employee == 'o' || employee == 'O'))
 	{
@@ -321,11 +321,11 @@ void searcharticle(vector<Article*> articles)
 
 	while (!(choice == 'e' || choice == 'E'))
 	{
-		cout << "Do you wish to do a normal search (n), do a filtered search (f), or exit (e): " << endl;
+		cout << "Do you wish to do a normal search (n), do a filtered search (f), or exit (e): ";
 		cin >> choice;
 		if (choice == 'n' || choice == 'N')
 		{
-			cout << "Do you wish to look at all of the items (all), or look for a specific object (just type what you are looking for): " << endl;
+			cout << "Do you wish to look at all of the items (all), or look for a specific object (just type what you are looking for): ";
 			cin.ignore();
 			getline(cin, search);
 			if (search.compare("all") == 0 || search.compare("All") == 0)
@@ -358,7 +358,7 @@ void searcharticle(vector<Article*> articles)
 			}
 			if (filter == 't' || filter == 'T')
 			{
-				cout << "Do you wish to look at all of the items (all), or look for a specific object (just type what you are looking for): " << endl;
+				cout << "Do you wish to look at all of the items (all), or look for a specific object (just type what you are looking for): ";
 				cin.ignore();
 				getline(cin, search);
 				if (search.compare("all") == 0 || search.compare("All") == 0)
@@ -385,7 +385,7 @@ void searcharticle(vector<Article*> articles)
 
 			if (filter == 'r' || filter == 'R')
 			{
-				cout << "Do you wish to look at all of the items (all), or look for a specific object (just type what you are looking for): " << endl;
+				cout << "Do you wish to look at all of the items (all), or look for a specific object (just type what you are looking for): ";
 				cin.ignore();
 				getline(cin, search);
 				if (search.compare("all") == 0 || search.compare("All") == 0)
@@ -413,7 +413,7 @@ void searcharticle(vector<Article*> articles)
 			{
 				cout << "What size do you want: ";
 				cin >> size;
-				cout << "Do you wish to look at all of the items (all), or look for a specific object (just type what you are looking for): " << endl;
+				cout << "Do you wish to look at all of the items (all), or look for a specific object (just type what you are looking for): ";
 				cin.ignore();
 				getline(cin, search);
 				if (search.compare("all") == 0 || search.compare("All") == 0)
@@ -450,7 +450,7 @@ void addarticle(const string& articleFile, vector<Article*> articles, vector<str
 	char choice = 's', season;						//choice is type
 	string name, manufacturer, colorspeed;
 	bool occured = false, aluminum, articleAdd, done;
-	ofstream outArticle(articleFile, ios::app | ios::binary);
+	ofstream outArticle(articleFile, ios::out | ios::binary);
 
 	while (!(choice == 'e' || choice == 'E')) {
 		articleAdd = false;
@@ -947,11 +947,11 @@ void changearticle(const string& articleFile, vector<Article*> articles, vector<
 
 				if (articles[id - 1]->getType() == 'r' || articles[id - 1]->getType() == 'R') {
 					cout << "The article would be changed from:" << endl
-						<< articles[id - 1]->toString() << endl << "to" << endl << tempRim.toString();
+						<< articles[id - 1]->toString() << endl << "to:" << endl << tempRim.toString();
 				}
 				if (articles[id - 1]->getType() == 't' || articles[id - 1]->getType() == 'T') {
 					cout << "The article would be changed from:" << endl
-						<< articles[id - 1]->toString() << endl << "to" << endl << tempTire.toString() << endl;
+						<< articles[id - 1]->toString() << endl << "to:" << endl << tempTire.toString() << endl;
 				}
 
 				cout << "Do you wish to save your changes (y/n): ";
@@ -995,7 +995,7 @@ void changearticle(const string& articleFile, vector<Article*> articles, vector<
 									}
 
 									if (!outTireCenter) {
-										cerr << "Something went wrong opening the tire center file" << endl;
+										cerr << "Something went wrong opening the tire center file." << endl;
 										exit(EXIT_FAILURE);
 									}
 
@@ -1022,7 +1022,7 @@ void changearticle(const string& articleFile, vector<Article*> articles, vector<
 												}
 
 												if (!outTireCenter) {
-													cerr << "Something went wrong opening the tire center file" << endl;
+													cerr << "Something went wrong opening the tire center file." << endl;
 													exit(EXIT_FAILURE);
 												}
 
@@ -1047,7 +1047,7 @@ void changearticle(const string& articleFile, vector<Article*> articles, vector<
 										tireCenters[*tireCenterID - 1]->getArticles()[i].setType(articles[id - 1]->getType());
 
 										if (!outTireCenter) {
-											cerr << "Something went wrong opening the tire center file" << endl;
+											cerr << "Something went wrong opening the tire center file." << endl;
 											exit(EXIT_FAILURE);
 										}
 
@@ -1072,7 +1072,7 @@ void changearticle(const string& articleFile, vector<Article*> articles, vector<
 													tireCenters[*tireCenterID - 1]->getArticles()[i].setType(articles[id - 1]->getType());
 
 													if (!outTireCenter) {
-														cerr << "Something went wrong opening the tire center file" << endl;
+														cerr << "Something went wrong opening the tire center file." << endl;
 														exit(EXIT_FAILURE);
 													}
 
@@ -1139,7 +1139,7 @@ void searchcustomer(vector<Customer*> customers)
 
 	while (!(choice == 'e' || choice == 'E'))
 	{
-		cout << "Do you wish to do a normal search (n), do a filtered search (f), or exit (e): " << endl;
+		cout << "Do you wish to do a normal search (n), do a filtered search (f), or exit (e): ";
 		cin >> choice;
 		if (choice == 'n' || choice == 'N')
 		{
@@ -1238,7 +1238,7 @@ void addcustomer(const string& customerFile, vector<Customer*> customers, vector
 	streamoff loc;
 	char choice = 'x';
 	string name, address, VAT;
-	ofstream outCustomer(customerFile, ios::app | ios::binary);
+	ofstream outCustomer(customerFile, ios::out | ios::binary);
 	bool customerAdd, done;
 
 	while (!(choice == 'e' || choice == 'E')) {
@@ -1314,7 +1314,7 @@ void addcustomer(const string& customerFile, vector<Customer*> customers, vector
 							tireCenters[*tireCenterID - 1]->getCustomers()[i].setType(customers[customers.size() - 1]->getType());
 
 							if (!outTireCenter) {
-								cerr << "Something went wrong opening the tire center file" << endl;
+								cerr << "Something went wrong opening the tire center file." << endl;
 								exit(EXIT_FAILURE);
 							}
 
@@ -1338,7 +1338,7 @@ void addcustomer(const string& customerFile, vector<Customer*> customers, vector
 										tireCenters[*tireCenterID - 1]->getCustomers()[i].setType(customers[customers.size() - 1]->getType());
 
 										if (!outTireCenter) {
-											cerr << "Something went wrong opening the tire center file" << endl;
+											cerr << "Something went wrong opening the tire center file." << endl;
 											exit(EXIT_FAILURE);
 										}
 
@@ -1509,11 +1509,11 @@ void changecustomer(const string& customerFile, vector<Customer*> customers, vec
 
 				if (customers[id - 1]->getType() == 'u' || customers[id - 1]->getType() == 'U') {
 					cout << "The customer would be changed from:" << endl
-						<< customers[id - 1]->toString() << endl << "to" << endl << tempCustomer.toString();
+						<< customers[id - 1]->toString() << endl << "to:" << endl << tempCustomer.toString();
 				}
 				if (customers[id - 1]->getType() == 'o' || customers[id - 1]->getType() == 'O') {
 					cout << "The customer would be changed from:" << endl
-						<< customers[id - 1]->toString() << endl << "to" << endl << tempCompany.toString() << endl;
+						<< customers[id - 1]->toString() << endl << "to:" << endl << tempCompany.toString() << endl;
 				}
 
 				cout << "Do you wish to save your changes (y/n): ";
@@ -1549,7 +1549,7 @@ void changecustomer(const string& customerFile, vector<Customer*> customers, vec
 									tireCenters[*tireCenterID - 1]->getCustomers()[i].setAddress(customers[id - 1]->getAddress());
 
 									if (!outTireCenter) {
-										cerr << "Something went wrong opening the tire center file" << endl;
+										cerr << "Something went wrong opening the tire center file." << endl;
 										exit(EXIT_FAILURE);
 									}
 
@@ -1568,7 +1568,7 @@ void changecustomer(const string& customerFile, vector<Customer*> customers, vec
 												tireCenters[*tireCenterID - 1]->getCustomers()[i].setAddress(customers[id - 1]->getAddress());
 
 												if (!outTireCenter) {
-													cerr << "Something went wrong opening the tire center file" << endl;
+													cerr << "Something went wrong opening the tire center file." << endl;
 													exit(EXIT_FAILURE);
 												}
 
@@ -1590,7 +1590,7 @@ void changecustomer(const string& customerFile, vector<Customer*> customers, vec
 										tireCenters[*tireCenterID - 1]->getCustomers()[i].setType(customers[id - 1]->getType());
 
 										if (!outTireCenter) {
-											cerr << "Something went wrong opening the tire center file" << endl;
+											cerr << "Something went wrong opening the tire center file." << endl;
 											exit(EXIT_FAILURE);
 										}
 
@@ -1612,7 +1612,7 @@ void changecustomer(const string& customerFile, vector<Customer*> customers, vec
 													tireCenters[*tireCenterID - 1]->getCustomers()[i].setType(customers[id - 1]->getType());
 
 													if (!outTireCenter) {
-														cerr << "Something went wrong opening the tire center file" << endl;
+														cerr << "Something went wrong opening the tire center file." << endl;
 														exit(EXIT_FAILURE);
 													}
 
@@ -1673,7 +1673,7 @@ void searchinvoice(vector<Invoice*> invoices)
 
 	while (!(choice == 'e' || choice == 'E'))
 	{
-		cout << "Do you wish to show all invoices (a), search by customer (c), search by id (i), or exit (e): " << endl;
+		cout << "Do you wish to show all invoices (a), search by customer (c), search by id (i), or exit (e): ";
 		cin >> choice;
 		if (choice == 'a' || choice == 'A')
 		{
@@ -1932,7 +1932,7 @@ void makeorder(const string& invoiceFile, vector<Invoice*> invoices, const strin
 	Article article{ "", "", NULL, NULL, NULL, '\0' };
 	array<Article, ARTIEKELEN> artiekelen = { article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article, article, article, article, article, article, article, article, article , article, article, article, article , article, article, article, article ,article, article, article, article , article, article, article, article , article };
 	ifstream inCompany(customerFile, ios::in | ios::binary);
-	ofstream outInvoice(invoiceFile, ios::app | ios::binary);
+	ofstream outInvoice(invoiceFile, ios::out | ios::binary);
 
 	while (!(choice == 'e' || choice == 'E')) {
 		cout << "Do you wish to add an order (a), search for a customer (s), or exit (e): ";
@@ -2123,7 +2123,7 @@ void addtirecenter(const string& tireCenterFile, vector<TireCenter*> tireCenters
 	array<Article, ARTIEKELEN> artiekelen = { article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article, article };
 	Customer customer{ "", "", '\0' };
 	array<Customer, KLANTEN> klanten = { customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer, customer };
-	ofstream outTireCenter(tireCenterFile, ios::app | ios::binary);
+	ofstream outTireCenter(tireCenterFile, ios::out | ios::binary);
 
 	if (newTireCenter) {
 		while (!(filter == 'e' || filter == 'E')) {
