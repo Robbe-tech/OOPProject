@@ -61,7 +61,7 @@ string Customer::toTable() const {
 }
 
 void Customer::toFile(ofstream& outFile, streamoff* pos) {
-	outFile.seekp(*pos);
+	outFile.seekp(*pos, ios::beg);
 	outFile.write((char*)name, sizeof(char[NAME]));
 	outFile.write((char*)address, sizeof(char[ADDRESS]));
 	outFile.write((char*)&type, sizeof(char));
@@ -69,7 +69,7 @@ void Customer::toFile(ofstream& outFile, streamoff* pos) {
 }
 
 void Customer::fromFile(ifstream& inFile, streamoff* pos) {
-	inFile.seekg(*pos);
+	inFile.seekg(*pos, ios::beg);
 	if (inFile.peek() != EOF)
 	{
 		inFile.read((char*)name, sizeof(char[NAME]));

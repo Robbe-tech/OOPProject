@@ -86,7 +86,7 @@ string Article::toTable() const {
 }
 
 void Article::toFile(ofstream& outFile, streamoff* pos) {
-	outFile.seekp(*pos);
+	outFile.seekp(*pos, ios::beg);
 	outFile.write((char*)name, sizeof(char[CHAR]));
 	outFile.write((char*)manufacturer, sizeof(char[CHAR]));
 	outFile.write((char*)&stock, sizeof(int));
@@ -97,7 +97,7 @@ void Article::toFile(ofstream& outFile, streamoff* pos) {
 }
 
 void Article::fromFile(ifstream& inFile, streamoff* pos) {
-	inFile.seekg(*pos);
+	inFile.seekg(*pos, ios::beg);
 	if (inFile.peek() != EOF)
 	{
 		inFile.read((char*)name, sizeof(char[CHAR]));
